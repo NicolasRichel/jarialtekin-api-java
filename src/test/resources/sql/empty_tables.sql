@@ -1,0 +1,9 @@
+-- Empty all tables in database
+SET FOREIGN_KEY_CHECKS=0;
+TRUNCATE TABLE Tasks;
+TRUNCATE TABLE ParentTasks;
+TRUNCATE TABLE TasksDependencies;
+TRUNCATE TABLE TasksPlannings;
+TRUNCATE TABLE Projects;
+TRUNCATE TABLE ProjectsTasks;
+SET FOREIGN_KEY_CHECKS=1;

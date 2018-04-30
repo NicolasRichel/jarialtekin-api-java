@@ -1,0 +1,12 @@
+# Ignore IntelliJ files
+.idea/
+*.iml
+
+# Ignore Eclipse files
+.classpath
+.project
+.settings/
+
+# Ignore build output
+target/
+
