@@ -16,7 +16,12 @@ public class TaskService {
 	
 	//  Constructors
 	// ==============
-	
+
+    public TaskService(TaskDAO taskDAO, TaskPlanningDAO taskPlanningDAO) {
+        this.taskDao = taskDAO;
+        this.taskPlanningDao = taskPlanningDAO;
+    }
+
 	public TaskService(String daoImpl) {
 		DAOFactory daoFactory;
 		switch (daoImpl.toUpperCase()) {
@@ -49,6 +54,7 @@ public class TaskService {
 					task.getPriority(),
 					task.getStatus()
 				);
+				dto.setParentTask(taskDao.getParentTask(task.getId()));
 				dto.addSubTasks(taskDao.getSubTasks(task.getId()));
 				dto.addDependencies(taskDao.getTaskDependencies(task.getId()));
 				return dto;
