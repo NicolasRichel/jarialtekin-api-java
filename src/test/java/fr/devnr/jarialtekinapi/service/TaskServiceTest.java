@@ -74,12 +74,33 @@ class TaskServiceTest {
         List<TaskDto> result = service.getAllTasksDTO();
 
         // --{ ASSERT }--
+        assertEquals(3, result.size());
         TaskDto task = result.get(0);
         assertAll("task",
             () -> assertEquals(Long.valueOf(1), task.getId()),
             () -> assertEquals("T1", task.getName())
         );
         verify(taskDAO, times(1)).getAllTasks();
+    }
+
+    @Test
+    void GetTasKDTO() {
+        // --{ ARRANGE }--
+        Task task = new Task(1L, "T1");
+        task.setDescription("Une tâche chiante");
+        when(taskDAO.getTaskById(eq(1L))).thenReturn(task);
+        TaskService service = new TaskService(taskDAO, taskPlanningDAO);
+
+        // --{ ACT }--
+        TaskDto result = service.getTaskDTO(1L);
+
+        // --{ ASSERT }--
+        assertAll(
+            () -> assertEquals(Long.valueOf(1), result.getId()),
+            () -> assertEquals("T1", result.getName()),
+            () -> assertEquals("Une tâche chiante", result.getDescription())
+        );
+        verify(taskDAO, times(1)).getTaskById(eq(1L));
     }
 
     @Test

@@ -1,7 +1,6 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
 import fr.devnr.jarialtekinapi.dto.TaskDto;
-import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.service.TaskService;
 import org.junit.jupiter.api.Test;
 
@@ -32,12 +31,31 @@ public class TaskQueryTest {
         // --{ ASSERT }--
         assertEquals(3, result.size());
         TaskDto task = result.get(0);
-        assertAll("task",
+        assertAll(
             () -> assertEquals(Long.valueOf(1), task.getId()),
             () -> assertEquals("T1", task.getName()),
             () -> assertEquals("La tâche 1.", task.getDescription())
         );
         verify(taskService, times(1)).getAllTasksDTO();
+    }
+
+    @Test
+    void GetTask() {
+        // --{ ARRANGE }--
+        TaskDto task = new TaskDto(1L, "T1", "Description");
+        when(taskService.getTaskDTO(eq(1L))).thenReturn(task);
+        Query query = new Query(taskService);
+
+        // --{ ACT }--
+        TaskDto result = query.task(1L);
+
+        // --{ ASSERT }--
+        assertAll(
+            () -> assertEquals(Long.valueOf(1), result.getId()),
+            () -> assertEquals("T1", result.getName()),
+            () -> assertEquals("Description", result.getDescription())
+        );
+        verify(taskService, times(1)).getTaskDTO(eq(1L));
     }
 
 }

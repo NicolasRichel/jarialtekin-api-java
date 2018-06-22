@@ -77,6 +77,15 @@ public class TaskService {
 			.collect(Collectors.toList());
 	}
 
+	public TaskDto getTaskDTO(Long idTask) {
+        Task task = taskDao.getTaskById(idTask);
+        return new TaskDto(
+            task.getId(),
+            task.getName(),
+            task.getDescription()
+        );
+    }
+
 	public PeriodDto getPeriodDTO(Long idTask) {
         TaskPlanning planning = taskPlanningDao.getTaskPlanningByTask(idTask);
         return new PeriodDto(
