@@ -7,7 +7,10 @@ import fr.devnr.jarialtekinapi.dao.factory.DAOFactory;
 import fr.devnr.jarialtekinapi.dao.factory.DAOFactoryDefault;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskDAO;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskPlanningDAO;
+import fr.devnr.jarialtekinapi.dto.PeriodDto;
 import fr.devnr.jarialtekinapi.dto.TaskDto;
+import fr.devnr.jarialtekinapi.model.Task;
+import fr.devnr.jarialtekinapi.model.TaskPlanning;
 
 public class TaskService {
 	
@@ -29,8 +32,6 @@ public class TaskService {
 				daoFactory = new DAOFactoryDefault(); break;
 			case "MARIADB":
 				daoFactory = new DAOFactoryDefault(); break;
-			case "MONGODB":
-				daoFactory = null; break;
 			default:
 				daoFactory = new DAOFactoryDefault(); break;
 		}
@@ -43,23 +44,45 @@ public class TaskService {
 	//  Public Methods
 	// ================
 	
-	public List<TaskDto> getAllTasks() {
+	public List<Task> getAllTasksModel() {
 		return taskDao.getAllTasks()
 			.stream()
 			.map(task -> {
-				TaskDto dto = new TaskDto(
+				Task model = new Task(
 					task.getId(), 
 					task.getName(), 
 					task.getDescription(), 
 					task.getPriority(),
 					task.getStatus()
 				);
-				dto.setParentTask(taskDao.getParentTask(task.getId()));
-				dto.addSubTasks(taskDao.getSubTasks(task.getId()));
-				dto.addDependencies(taskDao.getTaskDependencies(task.getId()));
+				model.setParentTask(taskDao.getParentTask(task.getId()));
+				model.addSubTasks(taskDao.getSubTasks(task.getId()));
+				model.addDependencies(taskDao.getTaskDependencies(task.getId()));
+				return model;
+			})
+			.collect(Collectors.toList());
+	}
+
+	public List<TaskDto> getAllTasksDTO() {
+    	return taskDao.getAllTasks()
+			.stream()
+			.map(task -> {
+				TaskDto dto = new TaskDto(
+					task.getId(),
+					task.getName(),
+					task.getDescription()
+				);
 				return dto;
 			})
 			.collect(Collectors.toList());
+	}
+
+	public PeriodDto getPeriodDTO(Long idTask) {
+        TaskPlanning planning = taskPlanningDao.getTaskPlanningByTask(idTask);
+        return new PeriodDto(
+            planning.getStart().toString(),
+            planning.getEnd().toString()
+        );
 	}
 	
 }

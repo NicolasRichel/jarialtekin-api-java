@@ -44,7 +44,7 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		try (
 		Connection c = source.getConnection();
 		Statement stmt = c.createStatement();
-		ResultSet rs = stmt.executeQuery(REQ_GetAllTaskPlannings);) {
+		ResultSet rs = stmt.executeQuery(REQ_GetAllTaskPlannings)) {
 			
 			while (rs.next()) {
 				plannings.add(extractTaskPlanning(rs));
@@ -73,7 +73,7 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		
 		try(
 		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskPlanningByTask);) {
+		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskPlanningByTask)) {
 			
 			stmt.setLong(1, idTask);
 			try (ResultSet rs = stmt.executeQuery()) {
@@ -104,7 +104,7 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		
 		try (
 		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskPlanningsByPeriod);) {
+		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskPlanningsByPeriod)) {
 			
 			stmt.setDate(1, Date.valueOf(start.toLocalDate()));
             stmt.setDate(2, Date.valueOf(start.toLocalDate()));
@@ -167,7 +167,7 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		
 		try (
 		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_UpdateTaskPlanning);) {
+		PreparedStatement stmt = c.prepareStatement(REQ_UpdateTaskPlanning)) {
 			
 			stmt.setDate(1, Date.valueOf(taskPlanning.getStart().toLocalDate()));
 			stmt.setTime(2, Time.valueOf(taskPlanning.getStart().toLocalTime()));
