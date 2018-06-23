@@ -1,6 +1,7 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import fr.devnr.jarialtekinapi.dto.PeriodDto;
 import fr.devnr.jarialtekinapi.dto.TaskDto;
 import fr.devnr.jarialtekinapi.service.TaskService;
 
@@ -24,6 +25,10 @@ public class Query implements GraphQLQueryResolver {
 
     public List<TaskDto> allTasks() {
         return taskService.getAllTasksDTO();
+    }
+
+    public List<TaskDto> allTasksInPeriod(PeriodDto period) {
+        return taskService.getTasksByPeriodDTO(period);
     }
 
     public TaskDto task(Long idTask) {

@@ -84,6 +84,40 @@ class TaskServiceTest {
     }
 
     @Test
+    void GetTasksByPeriodDTO() {
+        // --{ ARRANGE }--
+        LocalDateTime start = LocalDateTime.of(2018, 2, 3, 9, 0);
+        LocalDateTime end = LocalDateTime.of(2018, 2, 5, 12, 30);
+        List<TaskPlanning> tasks = Arrays.asList(
+            new TaskPlanning(
+                new Task(1L, "T1"),
+                LocalDateTime.of(2018, 2, 3, 15, 0),
+                LocalDateTime.of(2018, 2, 3, 18, 0)
+            ),
+            new TaskPlanning(
+                new Task(2L, "T2"),
+                LocalDateTime.of(2018, 2, 4, 8, 30),
+                LocalDateTime.of(2018, 2, 4, 12, 0)
+            )
+        );
+        when(taskPlanningDAO.getTaskPlanningsByPeriod(eq(start), eq(end))).thenReturn(tasks);
+        TaskService service = new TaskService(taskDAO, taskPlanningDAO);
+
+        // --{ ACT }--
+        PeriodDto period = new PeriodDto("2018-02-03T09:00", "2018-02-05T12:30");
+        List<TaskDto> result = service.getTasksByPeriodDTO(period);
+
+        // --{ ASSERT }--
+        assertEquals(2, result.size());
+        TaskDto task = result.get(0);
+        assertAll(
+            () -> assertEquals(Long.valueOf(1), task.getId()),
+            () -> assertEquals("T1", task.getName())
+        );
+        verify(taskPlanningDAO, times(1)).getTaskPlanningsByPeriod(eq(start), eq(end));
+    }
+
+    @Test
     void GetTasKDTO() {
         // --{ ARRANGE }--
         Task task = new Task(1L, "T1");

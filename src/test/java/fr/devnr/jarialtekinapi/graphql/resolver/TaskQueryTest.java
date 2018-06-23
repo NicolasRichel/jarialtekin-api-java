@@ -1,5 +1,6 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
+import fr.devnr.jarialtekinapi.dto.PeriodDto;
 import fr.devnr.jarialtekinapi.dto.TaskDto;
 import fr.devnr.jarialtekinapi.service.TaskService;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,31 @@ public class TaskQueryTest {
             () -> assertEquals("La tâche 1.", task.getDescription())
         );
         verify(taskService, times(1)).getAllTasksDTO();
+    }
+
+    @Test
+    void GetAllTasksInPeriod() {
+        // --{ ARRANGE }--
+        List<TaskDto> tasks = Arrays.asList(
+            new TaskDto(1L, "X", "abcd"),
+            new TaskDto(2L, "Y", "1234")
+        );
+        when(taskService.getTasksByPeriodDTO(any())).thenReturn(tasks);
+        Query query = new Query(taskService);
+
+        // --{ ACT }--
+        PeriodDto period = new PeriodDto("2018-06-21T10:00", "2018-07-18T12:00");
+        List<TaskDto> result = query.allTasksInPeriod(period);
+
+        // --{ ASSERT }--
+        assertEquals(2, result.size());
+        TaskDto task = result.get(0);
+        assertAll(
+            () -> assertEquals(Long.valueOf(1), task.getId()),
+            () -> assertEquals("X", task.getName()),
+            () -> assertEquals("abcd", task.getDescription())
+        );
+        verify(taskService, times(1)).getTasksByPeriodDTO(any());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package fr.devnr.jarialtekinapi.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,15 +68,29 @@ public class TaskService {
     	return taskDao.getAllTasks()
 			.stream()
 			.map(task -> {
-				TaskDto dto = new TaskDto(
+				return new TaskDto(
 					task.getId(),
 					task.getName(),
 					task.getDescription()
 				);
-				return dto;
 			})
 			.collect(Collectors.toList());
 	}
+
+	public List<TaskDto> getTasksByPeriodDTO(PeriodDto period) {
+        LocalDateTime start = LocalDateTime.parse(period.getStart());
+        LocalDateTime end = LocalDateTime.parse(period.getEnd());
+        return taskPlanningDao.getTaskPlanningsByPeriod(start, end)
+            .stream()
+            .map(planning -> {
+                Task task = planning.getTask();
+                return new TaskDto(
+                    task.getId(),
+                    task.getName(),
+                    task.getDescription()
+                );
+            }).collect(Collectors.toList());
+    }
 
 	public TaskDto getTaskDTO(Long idTask) {
         Task task = taskDao.getTaskById(idTask);
