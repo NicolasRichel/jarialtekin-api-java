@@ -54,12 +54,12 @@ class ProjectDAOTest {
         // --{ ASSERT}--
         assertEquals(2, projects.size());
         Project project = projects.get(0);
-        assertAll("project",
+        assertAll(
             () -> assertEquals(Long.valueOf(1), project.getId()),
             () -> assertEquals("P1", project.getName()),
             () -> assertEquals("Le projet 1", project.getDescription()),
-            () -> assertEquals(LocalDate.of(2018, 01, 01), project.getStartDate()),
-            () -> assertEquals(LocalDate.of(2018, 01, 10), project.getEndDate())
+            () -> assertEquals(LocalDate.of(2018, 1, 1), project.getStartDate()),
+            () -> assertEquals(LocalDate.of(2018, 1, 10), project.getEndDate())
         );
     }
 
@@ -72,12 +72,30 @@ class ProjectDAOTest {
         Project project = dao.getProjectById(1L);
 
         // --{ ASSERT }--
-        assertAll("project",
+        assertAll(
             () -> assertEquals(Long.valueOf(1), project.getId()),
             () -> assertEquals("P1", project.getName()),
             () -> assertEquals("Le projet 1", project.getDescription()),
-            () -> assertEquals(LocalDate.of(2018, 01, 01), project.getStartDate()),
-            () -> assertEquals(LocalDate.of(2018, 01, 10), project.getEndDate())
+            () -> assertEquals(LocalDate.of(2018, 1, 1), project.getStartDate()),
+            () -> assertEquals(LocalDate.of(2018, 1, 10), project.getEndDate())
+        );
+    }
+
+    @Test
+    void GetProjectByTask() {
+        // --{ ARRANGE }--
+        ProjectDAO dao = factory.getProjectDAO();
+
+        // --{ ACT }--
+        Project project = dao.getProjectByTask(1L);
+
+        // --{ ASSERT }--
+        assertAll(
+            () -> assertEquals(Long.valueOf(1L), project.getId()),
+            () -> assertEquals("P1", project.getName()),
+            () -> assertEquals("Le projet 1", project.getDescription()),
+            () -> assertEquals(LocalDate.of(2018, 1, 1), project.getStartDate()),
+            () -> assertEquals(LocalDate.of(2018, 1, 10), project.getEndDate())
         );
     }
 
@@ -93,7 +111,7 @@ class ProjectDAOTest {
 
         // --{ ASSERT }--
         assertEquals(3, projects.size());
-        assertAll("project",
+        assertAll(
             () -> assertEquals("P3", createdProject.getName()),
             () -> assertEquals("Description du projet", createdProject.getDescription()),
             () -> assertEquals(LocalDate.now(), project.getStartDate()),
@@ -113,7 +131,7 @@ class ProjectDAOTest {
 
         // --{ ASSERT }--
         assertTrue(isUpdated);
-        assertAll("project",
+        assertAll(
             () -> assertEquals("P1", updatedProject.getName()),
             () -> assertEquals("Description du projet", updatedProject.getDescription()),
             () -> assertEquals(LocalDate.now(), project.getStartDate()),
@@ -148,7 +166,7 @@ class ProjectDAOTest {
         // --{ ASSERT }--
         assertEquals(3, tasks.size());
         Task task = tasks.get(0);
-        assertAll("task",
+        assertAll(
             () -> assertEquals(Long.valueOf(1), task.getId()),
             () -> assertEquals("T1", task.getName())
         );

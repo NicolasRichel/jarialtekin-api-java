@@ -16,12 +16,12 @@ type Query {
 	allTasks: [Task]!
 	allTasksInPeriod(period: Period!): [Task]!
 	task(id: Int!): Task
-	taskProject(id: Int!): Project
 	
 	# Project queries :
 	allProjects: [Project]!
 	project(id: Int!): Project
 	projectTasks(id: Int!): [Task]!
+	taskProject(id: Int!): Project
 }
 
 

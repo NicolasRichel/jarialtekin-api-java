@@ -8,7 +8,7 @@ import fr.devnr.jarialtekinapi.model.Task;
 public interface ProjectDAO {
 	
 	/**
-	 * Get all projects in database (i.e. the while content of the Projects table).
+	 * Get all projects in database (i.e. the whole content of the Projects table).
 	 * 
 	 * @return the list of all projects
 	 */
@@ -21,6 +21,14 @@ public interface ProjectDAO {
 	 * @return the project identified by <code>idProject</code>
 	 */
 	Project getProjectById(Long idProject);
+
+	/**
+	 * Get the project to which the specified task is associated to.
+	 *
+	 * @param idTask id of a task
+	 * @return the project the task is associated to
+	 */
+	Project getProjectByTask(Long idTask);
 	
 	/**
 	 * Create a new project in database.

@@ -69,7 +69,7 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 		PreparedStatement stmt = c.prepareStatement(REQ_GetProjectById)) {
 			
 			stmt.setLong(1, idProject);
-			try(ResultSet rs = stmt.executeQuery();) {
+			try(ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
 					project = extractProject(rs);
 				}
@@ -81,6 +81,39 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 		
 		return project;
 	}
+
+	/**
+	 *
+	 */
+	// Query
+	private static final String REQ_GetProjectByTask = "" +
+            "SELECT p.id, p.name, p.description, p.startDate, p.endDate " +
+            "   FROM Projects p " +
+            "   JOIN ProjectsTasks t ON p.id=t.idProject" +
+            "   WHERE t.idTask=?";
+	// Method
+	@Override
+	public Project getProjectByTask(Long idTask) {
+
+	    Project project = null;
+
+	    try(
+        Connection c = source.getConnection();
+        PreparedStatement stmt = c.prepareStatement(REQ_GetProjectByTask)) {
+
+	        stmt.setLong(1, idTask);
+	        try(ResultSet rs = stmt.executeQuery()) {
+	            if(rs.next()) {
+	                project = extractProject(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+	        e.printStackTrace();
+        }
+
+	    return project;
+    }
 
 	/**
 	 * Create a new project in database.

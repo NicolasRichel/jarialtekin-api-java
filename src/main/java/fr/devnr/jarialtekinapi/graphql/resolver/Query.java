@@ -35,4 +35,9 @@ public class Query implements GraphQLQueryResolver {
         return taskService.getTaskDTO(idTask);
     }
 
+    // TODO : create method 'allProjects'
+    // TODO : create method 'project'
+    // TODO : create method 'projectTasks'
+    // TODO : create method 'taskProject'
+
 }

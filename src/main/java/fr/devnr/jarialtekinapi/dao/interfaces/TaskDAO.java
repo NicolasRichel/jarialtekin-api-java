@@ -11,7 +11,7 @@ public interface TaskDAO {
 	 * 
 	 * @return a list of all tasks
 	 */
-	public List<Task> getAllTasks();
+	List<Task> getAllTasks();
 	
 	/**
 	 * Get one task from the database based on its id.
@@ -19,7 +19,7 @@ public interface TaskDAO {
 	 * @param idTask id of the task to retrieve
 	 * @return the task with the specified id or null if it does not exist
 	 */
-	public Task getTaskById(Long idTask);
+	Task getTaskById(Long idTask);
 	
 	/**
 	 * Get the parent task from database for the task identified by <code>idTask</code>.
@@ -27,7 +27,7 @@ public interface TaskDAO {
 	 * @param idTask id of the task for which to get the parent
 	 * @return the parent task of the specified task or <code>null</code> if it does not exist
 	 */
-	public Task getParentTask(Long idTask);
+	Task getParentTask(Long idTask);
 	
 	/**
 	 * Get the list of the sub-tasks for the task identified by <code>idTask</code>.
@@ -35,7 +35,7 @@ public interface TaskDAO {
 	 * @param idTask id of the task for which to get the sub-tasks
 	 * @return the list of the sub-tasks of the specified task (possibly an empty list there is none)
 	 */
-	public List<Task> getSubTasks(Long idTask);
+	List<Task> getSubTasks(Long idTask);
 	
 	/**
 	 * Get the list of the dependencies for the task identified by <code>idTask</code>.
@@ -44,7 +44,7 @@ public interface TaskDAO {
 	 * @param idTask id of the task for which to get the dependencies
 	 * @return the list of tdependencies of the specified task (possibly an empty list there is none)
 	 */
-	public List<Task> getTaskDependencies(Long idTask);
+	List<Task> getTaskDependencies(Long idTask);
 	
 	/**
 	 * Create a new task in database (i.e. insert a row in the Tasks table).
@@ -53,7 +53,7 @@ public interface TaskDAO {
 	 * @param task the task to create (with no id)
 	 * @return the created task (with a freshly generated id)
 	 */
-	public Task createTask(Task task);
+	Task createTask(Task task);
 	
 	/**
 	 * Update a task in database in database according to the given task.
@@ -64,7 +64,7 @@ public interface TaskDAO {
 	 * @param task the task to update with its new id
 	 * @return <code>true</code> if the task has been updated successfuly, <code>false</code> otherwise
 	 */
-	public Boolean updateTask(Task task);
+	Boolean updateTask(Task task);
 	
 	/**
 	 * Delete the task identified by <code>idTask</code> in database.
@@ -72,6 +72,6 @@ public interface TaskDAO {
 	 * @param idTask id of the task to delete
 	 * @return <code>true</code> if the task has been deleted successfuly, <code>false</code> otherwise
 	 */
-	public Boolean deleteTask(Long idTask);
+	Boolean deleteTask(Long idTask);
 	
 }

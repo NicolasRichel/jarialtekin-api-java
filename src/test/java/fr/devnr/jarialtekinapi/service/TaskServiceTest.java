@@ -4,6 +4,7 @@ import fr.devnr.jarialtekinapi.dao.interfaces.TaskDAO;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskPlanningDAO;
 import fr.devnr.jarialtekinapi.dto.PeriodDto;
 import fr.devnr.jarialtekinapi.dto.TaskDto;
+import fr.devnr.jarialtekinapi.model.Project;
 import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.model.TaskPlanning;
 import org.junit.jupiter.api.Test;
@@ -118,7 +119,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void GetTasKDTO() {
+    void GetTaskDTO() {
         // --{ ARRANGE }--
         Task task = new Task(1L, "T1");
         task.setDescription("Une tâche chiante");

@@ -1,5 +1,6 @@
 package fr.devnr.jarialtekinapi.dto;
 
+// TODO : rename class PeriodDto to PeriodDTO
 public class PeriodDto {
 
     private String start;
