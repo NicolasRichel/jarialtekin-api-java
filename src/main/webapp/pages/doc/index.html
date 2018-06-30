@@ -3,8 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>JariaTekin API Documentation</title>
+    <style>
+        body {
+          margin: 0;
+          padding: 24px;
+        }
+        h1 {
+          text-align: center;
+        }
+        section > p {
+          margin: 24px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>JarialTekin API Documentation</h1>
+    <hr/>
+    <section id="intro">
+        <h2>Introduction</h2>
+        <p>
+            <b>Forewords :</b> JarialTekin is intended to be a simple and extensible
+            tasks and projects manager.<br/>
+            It is composed of a front-end part (the UI) and a back-end API
+            (JarialTekin API) currently implemented with Java (1.8).
+        </p>
+        <img src="./jarialtekin_archi.png"/>
+        <p>
+            JarialTekin API is a server side application that implements a GraphQL API
+            for the JarialTekin progressive web app (PWA).<br/>
+            Its first goal is to provide an interface to access and manipulate data in
+            database (CRUD operations).<br/>
+            However, further developments will probably extend the funcntionalities of
+            this application to include the ability to perform more complex processing.
+        </p>
+    </section>
+    <hr/>
+    <section id="structure">
+        <h2>Application Structure</h2>
+        <p>
+            JarialTekin API has a 'layer-based' structure that is represented on the
+            schema below.
+        </p>
+        <img src="./jarialtekin-api_structure.png"/>
+        <p>
+
+        </p>
+    </section>
 </body>
 </html>
