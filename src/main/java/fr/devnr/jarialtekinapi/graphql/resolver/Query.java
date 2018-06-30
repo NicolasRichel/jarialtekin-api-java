@@ -1,8 +1,10 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import fr.devnr.jarialtekinapi.dto.PeriodDto;
-import fr.devnr.jarialtekinapi.dto.TaskDto;
+import fr.devnr.jarialtekinapi.dto.PeriodDTO;
+import fr.devnr.jarialtekinapi.dto.ProjectDTO;
+import fr.devnr.jarialtekinapi.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.service.ProjectService;
 import fr.devnr.jarialtekinapi.service.TaskService;
 
 import java.util.List;
@@ -10,12 +12,14 @@ import java.util.List;
 public class Query implements GraphQLQueryResolver {
 
     private TaskService taskService;
+    private ProjectService projectService;
 
     // Constructors
     // ============
 
-    public Query(TaskService service) {
-        this.taskService = service;
+    public Query(TaskService taskService, ProjectService projectService) {
+        this.taskService = taskService;
+        this.projectService = projectService;
     }
 
 
@@ -23,21 +27,38 @@ public class Query implements GraphQLQueryResolver {
     // Public Methods
     // ==============
 
-    public List<TaskDto> allTasks() {
+    /** Task Queries */
+    /** ------------ */
+    public List<TaskDTO> allTasks() {
         return taskService.getAllTasksDTO();
     }
 
-    public List<TaskDto> allTasksInPeriod(PeriodDto period) {
+    public List<TaskDTO> allTasksInPeriod(PeriodDTO period) {
         return taskService.getTasksByPeriodDTO(period);
     }
 
-    public TaskDto task(Long idTask) {
+    public TaskDTO task(Long idTask) {
         return taskService.getTaskDTO(idTask);
     }
+    /** ------------ */
 
-    // TODO : create method 'allProjects'
-    // TODO : create method 'project'
-    // TODO : create method 'projectTasks'
-    // TODO : create method 'taskProject'
+    /** Project Queries */
+    /** --------------- */
+    public List<ProjectDTO> allProjects() {
+        return projectService.getAllProjectsDTO();
+    }
+
+    public ProjectDTO project(Long idProject) {
+        return projectService.getProjectDTO(idProject);
+    }
+
+    public ProjectDTO taskProject(Long idTask) {
+        return projectService.getProjectByTaskDTO(idTask);
+    }
+
+    public List<TaskDTO> projectTasks(Long idProject) {
+        return projectService.getProjectTasksDTO(idProject);
+    }
+    /** --------------- */
 
 }

@@ -1,7 +1,7 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import fr.devnr.jarialtekinapi.dto.TaskDto;
+import fr.devnr.jarialtekinapi.dto.TaskDTO;
 import fr.devnr.jarialtekinapi.service.TaskService;
 
 public class Mutation implements GraphQLMutationResolver {
@@ -21,7 +21,7 @@ public class Mutation implements GraphQLMutationResolver {
     // ==============
 
     // TODO : write method 'createTask'
-    public TaskDto createTask(TaskDto task) {
+    public TaskDTO createTask(TaskDTO task) {
         return null;
     }
 

@@ -1,7 +1,7 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
-import fr.devnr.jarialtekinapi.dto.PeriodDto;
-import fr.devnr.jarialtekinapi.dto.TaskDto;
+import fr.devnr.jarialtekinapi.dto.PeriodDTO;
+import fr.devnr.jarialtekinapi.dto.TaskDTO;
 import fr.devnr.jarialtekinapi.service.TaskService;
 import org.junit.jupiter.api.Test;
 
@@ -18,20 +18,20 @@ public class TaskQueryTest {
     @Test
     void GetAllTasks() {
         // --{ ARRANGE }--
-        List<TaskDto> tasks = Arrays.asList(
-            new TaskDto(1L, "T1", "La tâche 1."),
-            new TaskDto(2L, "T2", "Description."),
-            new TaskDto(3L, "T3", "")
+        List<TaskDTO> tasks = Arrays.asList(
+            new TaskDTO(1L, "T1", "La tâche 1."),
+            new TaskDTO(2L, "T2", "Description."),
+            new TaskDTO(3L, "T3", "")
         );
         when(taskService.getAllTasksDTO()).thenReturn(tasks);
-        Query query = new Query(taskService);
+        Query query = new Query(taskService, null);
 
         // --{ ACT }--
-        List<TaskDto> result = query.allTasks();
+        List<TaskDTO> result = query.allTasks();
 
         // --{ ASSERT }--
         assertEquals(3, result.size());
-        TaskDto task = result.get(0);
+        TaskDTO task = result.get(0);
         assertAll(
             () -> assertEquals(Long.valueOf(1), task.getId()),
             () -> assertEquals("T1", task.getName()),
@@ -43,20 +43,20 @@ public class TaskQueryTest {
     @Test
     void GetAllTasksInPeriod() {
         // --{ ARRANGE }--
-        List<TaskDto> tasks = Arrays.asList(
-            new TaskDto(1L, "X", "abcd"),
-            new TaskDto(2L, "Y", "1234")
+        List<TaskDTO> tasks = Arrays.asList(
+            new TaskDTO(1L, "X", "abcd"),
+            new TaskDTO(2L, "Y", "1234")
         );
         when(taskService.getTasksByPeriodDTO(any())).thenReturn(tasks);
-        Query query = new Query(taskService);
+        Query query = new Query(taskService, null);
 
         // --{ ACT }--
-        PeriodDto period = new PeriodDto("2018-06-21T10:00", "2018-07-18T12:00");
-        List<TaskDto> result = query.allTasksInPeriod(period);
+        PeriodDTO period = new PeriodDTO("2018-06-21T10:00", "2018-07-18T12:00");
+        List<TaskDTO> result = query.allTasksInPeriod(period);
 
         // --{ ASSERT }--
         assertEquals(2, result.size());
-        TaskDto task = result.get(0);
+        TaskDTO task = result.get(0);
         assertAll(
             () -> assertEquals(Long.valueOf(1), task.getId()),
             () -> assertEquals("X", task.getName()),
@@ -68,12 +68,12 @@ public class TaskQueryTest {
     @Test
     void GetTask() {
         // --{ ARRANGE }--
-        TaskDto task = new TaskDto(1L, "T1", "Description");
+        TaskDTO task = new TaskDTO(1L, "T1", "Description");
         when(taskService.getTaskDTO(eq(1L))).thenReturn(task);
-        Query query = new Query(taskService);
+        Query query = new Query(taskService, null);
 
         // --{ ACT }--
-        TaskDto result = query.task(1L);
+        TaskDTO result = query.task(1L);
 
         // --{ ASSERT }--
         assertAll(

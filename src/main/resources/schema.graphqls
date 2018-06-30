@@ -20,8 +20,8 @@ type Query {
 	# Project queries :
 	allProjects: [Project]!
 	project(id: Int!): Project
-	projectTasks(id: Int!): [Task]!
 	taskProject(id: Int!): Project
+	projectTasks(id: Int!): [Task]!
 }
 
 

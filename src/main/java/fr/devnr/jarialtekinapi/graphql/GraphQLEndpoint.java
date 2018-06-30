@@ -7,6 +7,7 @@ import com.coxautodev.graphql.tools.SchemaParser;
 import fr.devnr.jarialtekinapi.graphql.resolver.Mutation;
 import fr.devnr.jarialtekinapi.graphql.resolver.Query;
 import fr.devnr.jarialtekinapi.graphql.resolver.TaskResolver;
+import fr.devnr.jarialtekinapi.service.ProjectService;
 import fr.devnr.jarialtekinapi.service.TaskService;
 import graphql.schema.GraphQLSchema;
 import graphql.servlet.SimpleGraphQLServlet;
@@ -15,9 +16,11 @@ import graphql.servlet.SimpleGraphQLServlet;
 public class GraphQLEndpoint extends SimpleGraphQLServlet {
 
 	private static final TaskService taskService;
+	private static final ProjectService projectService;
 
 	static {
 		taskService = new TaskService("DEFAULT");
+		projectService = new ProjectService("DEFAULT");
 	}
 
 	//  Constructors
@@ -36,7 +39,7 @@ public class GraphQLEndpoint extends SimpleGraphQLServlet {
 		return SchemaParser.newParser()
 			.file("schema.graphqls")
 			.resolvers(
-				new Query(taskService),
+				new Query(taskService, projectService),
 				new Mutation(taskService),
 				new TaskResolver(taskService)
 			)

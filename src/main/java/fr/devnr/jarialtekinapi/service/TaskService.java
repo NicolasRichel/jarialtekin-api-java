@@ -8,8 +8,8 @@ import fr.devnr.jarialtekinapi.dao.factory.DAOFactory;
 import fr.devnr.jarialtekinapi.dao.factory.DAOFactoryDefault;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskDAO;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskPlanningDAO;
-import fr.devnr.jarialtekinapi.dto.PeriodDto;
-import fr.devnr.jarialtekinapi.dto.TaskDto;
+import fr.devnr.jarialtekinapi.dto.PeriodDTO;
+import fr.devnr.jarialtekinapi.dto.TaskDTO;
 import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.model.TaskPlanning;
 
@@ -64,27 +64,21 @@ public class TaskService {
 			.collect(Collectors.toList());
 	}
 
-	public List<TaskDto> getAllTasksDTO() {
+	public List<TaskDTO> getAllTasksDTO() {
     	return taskDao.getAllTasks()
 			.stream()
-			.map(task -> {
-				return new TaskDto(
-					task.getId(),
-					task.getName(),
-					task.getDescription()
-				);
-			})
+			.map(t -> new TaskDTO(t.getId(), t.getName(), t.getDescription()))
 			.collect(Collectors.toList());
 	}
 
-	public List<TaskDto> getTasksByPeriodDTO(PeriodDto period) {
+	public List<TaskDTO> getTasksByPeriodDTO(PeriodDTO period) {
         LocalDateTime start = LocalDateTime.parse(period.getStart());
         LocalDateTime end = LocalDateTime.parse(period.getEnd());
         return taskPlanningDao.getTaskPlanningsByPeriod(start, end)
             .stream()
             .map(planning -> {
                 Task task = planning.getTask();
-                return new TaskDto(
+                return new TaskDTO(
                     task.getId(),
                     task.getName(),
                     task.getDescription()
@@ -92,18 +86,18 @@ public class TaskService {
             }).collect(Collectors.toList());
     }
 
-	public TaskDto getTaskDTO(Long idTask) {
+	public TaskDTO getTaskDTO(Long idTask) {
         Task task = taskDao.getTaskById(idTask);
-        return new TaskDto(
+        return new TaskDTO(
             task.getId(),
             task.getName(),
             task.getDescription()
         );
     }
 
-	public PeriodDto getPeriodDTO(Long idTask) {
+	public PeriodDTO getPeriodDTO(Long idTask) {
         TaskPlanning planning = taskPlanningDao.getTaskPlanningByTask(idTask);
-        return new PeriodDto(
+        return new PeriodDTO(
             planning.getStart().toString(),
             planning.getEnd().toString()
         );

@@ -1,13 +1,12 @@
 package fr.devnr.jarialtekinapi.dto;
 
-// TODO : rename class TaskDto to TaskDTO
-public class TaskDto {
+public class TaskDTO {
 
     private Long id;
     private String name;
     private String description;
 
-    public TaskDto(Long id, String name, String description) {
+    public TaskDTO(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
