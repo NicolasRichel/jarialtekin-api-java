@@ -102,5 +102,26 @@ public class TaskService {
             planning.getEnd().toString()
         );
 	}
-	
+
+	public TaskDTO createTask(TaskDTO task) {
+    	Task newTask = new Task(null, task.getName());
+    	newTask.setDescription(task.getDescription());
+    	newTask = taskDao.createTask(newTask);
+    	return new TaskDTO(
+			newTask.getId(),
+			newTask.getName(),
+			newTask.getDescription()
+		);
+	}
+
+	public Boolean updateTask(TaskDTO task) {
+        Task newTask = new Task(task.getId(), task.getName());
+        newTask.setDescription(task.getDescription());
+    	return taskDao.updateTask(newTask);
+	}
+
+	public Boolean deleteTask(Long idTask) {
+    	return taskDao.deleteTask(idTask);
+	}
+
 }

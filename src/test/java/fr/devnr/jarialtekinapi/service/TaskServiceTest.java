@@ -164,4 +164,54 @@ class TaskServiceTest {
         verify(taskPlanningDAO, times(1)).getTaskPlanningByTask(eq(1L));
     }
 
+    @Test
+    void CreateTask() {
+        // --{ ARRANGE }--
+        Task task = new Task(11L, "Task");
+        task.setDescription("Description");
+        when(taskDAO.createTask(any(Task.class))).thenReturn(task);
+        TaskService service = new TaskService(taskDAO, taskPlanningDAO);
+
+        // --{ ACT }--
+        TaskDTO input = new TaskDTO(null, "Task", "Description");
+        TaskDTO result = service.createTask(input);
+
+        // --{ ASSERT }--
+        assertAll(
+            () -> assertEquals(Long.valueOf(11), result.getId()),
+            () -> assertEquals("Task", result.getName()),
+            () -> assertEquals("Description", result.getDescription())
+        );
+        verify(taskDAO, times(1)).createTask(any(Task.class));
+    }
+
+    @Test
+    void UpdateTask() {
+        // --{ ARRANGE }--
+        when(taskDAO.updateTask(any(Task.class))).thenReturn(Boolean.TRUE);
+        TaskService service = new TaskService(taskDAO, taskPlanningDAO);
+
+        // --{ ACT }--
+        TaskDTO input = new TaskDTO(12L, "T12", "Description");
+        Boolean result = service.updateTask(input);
+
+        // --{ ASSERT }--
+        assertTrue(result);
+        verify(taskDAO, times(1)).updateTask(any(Task.class));
+    }
+
+    @Test
+    void DeleteTask() {
+        // --{ ARRANGE }--
+        when(taskDAO.deleteTask(eq(13L))).thenReturn(Boolean.TRUE);
+        TaskService service = new TaskService(taskDAO, taskPlanningDAO);
+
+        // --{ ACT }--
+        Boolean result = service.deleteTask(13L);
+
+        // --{ ASSERT }--
+        assertTrue(result);
+        verify(taskDAO, times(1)).deleteTask(eq(13L));
+    }
+
 }
