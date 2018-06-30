@@ -17,7 +17,7 @@ public class TaskMutationTest {
         // --{ ARRANGE }--
         TaskDTO task = new TaskDTO(11L, "Task", "Description");
         when(taskService.createTask(any(TaskDTO.class))).thenReturn(task);
-        Mutation mutation = new Mutation(taskService);
+        Mutation mutation = new Mutation(taskService, null);
 
         // --{ ACT }--
         TaskDTO input = new TaskDTO(null, "Task", "Description");
@@ -36,7 +36,7 @@ public class TaskMutationTest {
     void UpdateTask() {
         // --{ ARRANGE }--
         when(taskService.updateTask(any(TaskDTO.class))).thenReturn(Boolean.TRUE);
-        Mutation mutation = new Mutation(taskService);
+        Mutation mutation = new Mutation(taskService, null);
 
         // --{ ACT }--
         TaskDTO input = new TaskDTO(12L, "T12", "");
@@ -51,7 +51,7 @@ public class TaskMutationTest {
     void DeleteTask() {
         // --{ ARRANGE }--
         when(taskService.deleteTask(eq(13L))).thenReturn(Boolean.TRUE);
-        Mutation mutation = new Mutation(taskService);
+        Mutation mutation = new Mutation(taskService, null);
 
         // --{ ACT }--
         Boolean result = mutation.deleteTask(13L);

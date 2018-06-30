@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import com.coxautodev.graphql.tools.SchemaParser;
 
 import fr.devnr.jarialtekinapi.graphql.resolver.Mutation;
+import fr.devnr.jarialtekinapi.graphql.resolver.ProjectResolver;
 import fr.devnr.jarialtekinapi.graphql.resolver.Query;
 import fr.devnr.jarialtekinapi.graphql.resolver.TaskResolver;
 import fr.devnr.jarialtekinapi.service.ProjectService;
@@ -40,8 +41,9 @@ public class GraphQLEndpoint extends SimpleGraphQLServlet {
 			.file("schema.graphqls")
 			.resolvers(
 				new Query(taskService, projectService),
-				new Mutation(taskService),
-				new TaskResolver(taskService)
+				new Mutation(taskService, projectService),
+				new TaskResolver(taskService),
+                new ProjectResolver(projectService)
 			)
 			.build()
 			.makeExecutableSchema();

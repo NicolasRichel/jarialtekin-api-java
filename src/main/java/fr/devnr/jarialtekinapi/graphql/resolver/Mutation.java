@@ -1,18 +1,22 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import fr.devnr.jarialtekinapi.dto.ProjectDTO;
 import fr.devnr.jarialtekinapi.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.service.ProjectService;
 import fr.devnr.jarialtekinapi.service.TaskService;
 
 public class Mutation implements GraphQLMutationResolver {
 
     private TaskService taskService;
+    private ProjectService projectService;
 
     // Constructors
     // ============
 
-    public Mutation(TaskService service) {
-        this.taskService = service;
+    public Mutation(TaskService taskService, ProjectService projectService) {
+        this.taskService = taskService;
+        this.projectService = projectService;
     }
 
 
@@ -20,6 +24,8 @@ public class Mutation implements GraphQLMutationResolver {
     // Public Methods
     // ==============
 
+    /** Task Mutations */
+    /** ============== */
     public TaskDTO createTask(TaskDTO task) {
         return taskService.createTask(task);
     }
@@ -31,9 +37,21 @@ public class Mutation implements GraphQLMutationResolver {
     public Boolean deleteTask(Long idTask) {
         return taskService.deleteTask(idTask);
     }
+    /** ============== */
 
-    // TODO : create method 'createProject'
-    // TODO : create method 'updateProject'
-    // TODO : create method 'deleteProject'
+    /** Project Mutations */
+    /** ================= */
+    public ProjectDTO createProject(ProjectDTO project) {
+        return projectService.createProject(project);
+    }
+
+    public Boolean updateProject(ProjectDTO project) {
+        return projectService.updateProject(project);
+    }
+
+    public Boolean deleteProject(Long idProject) {
+        return projectService.deleteProject(idProject);
+    }
+    /** ================= */
 
 }

@@ -129,7 +129,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    void CreateTask() {
+    void CreateProject() {
         // --{ ARRANGE }--
         Project project = new Project(21L, "Project");
         project.setDescription("Description");
@@ -150,7 +150,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    void UpdateTask() {
+    void UpdateProject() {
         // --{ ARRANGE }--
         when(projectDAO.updateProject(any(Project.class))).thenReturn(Boolean.TRUE);
         ProjectService service = new ProjectService(projectDAO);
@@ -165,7 +165,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    void DeleteTask() {
+    void DeleteProject() {
         // --{ ARRANGE }--
         when(projectDAO.deleteProject(eq(23L))).thenReturn(Boolean.TRUE);
         ProjectService service = new ProjectService(projectDAO);
