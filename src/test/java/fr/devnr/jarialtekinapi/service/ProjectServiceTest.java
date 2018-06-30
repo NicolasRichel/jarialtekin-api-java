@@ -128,4 +128,54 @@ public class ProjectServiceTest {
         verify(projectDAO, times(1)).getProjectById(eq(1L));
     }
 
+    @Test
+    void CreateTask() {
+        // --{ ARRANGE }--
+        Project project = new Project(21L, "Project");
+        project.setDescription("Description");
+        when(projectDAO.createProject(any(Project.class))).thenReturn(project);
+        ProjectService service = new ProjectService(projectDAO);
+
+        // --{ ACT }--
+        ProjectDTO input = new ProjectDTO(null, "Project", "Description");
+        ProjectDTO result = service.createProject(input);
+
+        // --{ ASSERT }--
+        assertAll(
+            () -> assertEquals(Long.valueOf(21), result.getId()),
+            () -> assertEquals("Project", result.getName()),
+            () -> assertEquals("Description", result.getDescription())
+        );
+        verify(projectDAO, times(1)).createProject(any(Project.class));
+    }
+
+    @Test
+    void UpdateTask() {
+        // --{ ARRANGE }--
+        when(projectDAO.updateProject(any(Project.class))).thenReturn(Boolean.TRUE);
+        ProjectService service = new ProjectService(projectDAO);
+
+        // --{ ACT }--
+        ProjectDTO input = new ProjectDTO(22L, "P22", "");
+        Boolean result = service.updateProject(input);
+
+        // --{ ASSERT }--
+        assertTrue(result);
+        verify(projectDAO, times(1)).updateProject(any(Project.class));
+    }
+
+    @Test
+    void DeleteTask() {
+        // --{ ARRANGE }--
+        when(projectDAO.deleteProject(eq(23L))).thenReturn(Boolean.TRUE);
+        ProjectService service = new ProjectService(projectDAO);
+
+        // --{ ACT }--
+        Boolean result = service.deleteProject(23L);
+
+        // --{ ASSERT }--
+        assertTrue(result);
+        verify(projectDAO, times(1)).deleteProject(eq(23L));
+    }
+
 }

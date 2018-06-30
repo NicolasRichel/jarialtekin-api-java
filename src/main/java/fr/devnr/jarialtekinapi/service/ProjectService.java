@@ -64,4 +64,25 @@ public class ProjectService {
         );
     }
 
+    public ProjectDTO createProject(ProjectDTO project) {
+        Project newProject = new Project(null, project.getName());
+        newProject.setDescription(project.getDescription());
+        newProject = projectDAO.createProject(newProject);
+        return new ProjectDTO(
+            newProject.getId(),
+            newProject.getName(),
+            newProject.getDescription()
+        );
+    }
+
+    public Boolean updateProject(ProjectDTO project) {
+        Project newProject = new Project(null, project.getName());
+        newProject.setDescription(project.getDescription());
+        return projectDAO.updateProject(newProject);
+    }
+
+    public Boolean deleteProject(Long idProject) {
+        return projectDAO.deleteProject(idProject);
+    }
+
 }
