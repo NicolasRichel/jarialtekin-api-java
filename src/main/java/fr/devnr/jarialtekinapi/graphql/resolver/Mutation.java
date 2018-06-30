@@ -20,13 +20,18 @@ public class Mutation implements GraphQLMutationResolver {
     // Public Methods
     // ==============
 
-    // TODO : write method 'createTask'
     public TaskDTO createTask(TaskDTO task) {
-        return null;
+        return taskService.createTask(task);
     }
 
-    // TODO : create method 'updateTask'
-    // TODO : create method 'deleteTask'
+    public Boolean updateTask(TaskDTO task) {
+        return taskService.updateTask(task);
+    }
+
+    public Boolean deleteTask(Long idTask) {
+        return taskService.deleteTask(idTask);
+    }
+
     // TODO : create method 'createProject'
     // TODO : create method 'updateProject'
     // TODO : create method 'deleteProject'
