@@ -123,18 +123,22 @@ class TaskServiceTest {
         Task task = new Task(1L, "T1");
         task.setDescription("Une tâche chiante");
         when(taskDAO.getTaskById(eq(1L))).thenReturn(task);
+        when(taskDAO.getTaskById(2L)).thenReturn(null);
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        TaskDTO result = service.getTaskDTO(1L);
+        TaskDTO result1 = service.getTaskDTO(1L);
+        TaskDTO result2 = service.getTaskDTO(2L);
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(1), result.getId()),
-            () -> assertEquals("T1", result.getName()),
-            () -> assertEquals("Une tâche chiante", result.getDescription())
+            () -> assertEquals(Long.valueOf(1), result1.getId()),
+            () -> assertEquals("T1", result1.getName()),
+            () -> assertEquals("Une tâche chiante", result1.getDescription())
         );
         verify(taskDAO, times(1)).getTaskById(eq(1L));
+        assertNull(result2);
+        verify(taskDAO, times(1)).getTaskById(eq(2L));
     }
 
     @Test
@@ -153,15 +157,20 @@ class TaskServiceTest {
             )
         );
         when(taskPlanningDAO.getTaskPlanningByTask(eq(1L))).thenReturn(planning);
+        when(taskPlanningDAO.getTaskPlanningByTask(eq(2L))).thenReturn(null);
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        PeriodDTO result = service.getPeriodDTO(1L);
+        PeriodDTO result1 = service.getPeriodDTO(1L);
+        PeriodDTO result2 = service.getPeriodDTO(2L);
 
         // --{ ASSERT }--
-        assertEquals("2000-01-01T13:00", result.getStart());
-        assertEquals("2000-01-02T08:30", result.getEnd());
+        assertEquals("2000-01-01T13:00", result1.getStart());
+        assertEquals("2000-01-02T08:30", result1.getEnd());
         verify(taskPlanningDAO, times(1)).getTaskPlanningByTask(eq(1L));
+        assertNull(result2);
+        verify(taskPlanningDAO, times(1)).getTaskPlanningByTask(eq(2L));
+
     }
 
     @Test

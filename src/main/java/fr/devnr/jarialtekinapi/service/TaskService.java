@@ -1,6 +1,9 @@
 package fr.devnr.jarialtekinapi.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,19 +91,20 @@ public class TaskService {
 
 	public TaskDTO getTaskDTO(Long idTask) {
         Task task = taskDao.getTaskById(idTask);
-        return new TaskDTO(
-            task.getId(),
-            task.getName(),
-            task.getDescription()
-        );
+        TaskDTO dto = null;
+        if (task!=null) {
+        	dto = new TaskDTO(task.getId(), task.getName(), task.getDescription());
+		}
+        return dto;
     }
 
 	public PeriodDTO getPeriodDTO(Long idTask) {
         TaskPlanning planning = taskPlanningDao.getTaskPlanningByTask(idTask);
-        return new PeriodDTO(
-            planning.getStart().toString(),
-            planning.getEnd().toString()
-        );
+        PeriodDTO dto = null;
+        if (planning!=null) {
+        	dto = new PeriodDTO(planning.getStart().toString(), planning.getEnd().toString());
+		}
+        return dto;
 	}
 
 	public TaskDTO createTask(TaskDTO task) {

@@ -33,8 +33,8 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 	 */
 	// Query
 	private static final String REQ_GetAllTaskPlannings = ""
-			+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
-			+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id";
+	+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
+	+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id";
 	// Method
 	@Override
 	public List<TaskPlanning> getAllTaskPlannings() {
@@ -62,9 +62,9 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 	 */
 	// Query
 	private static final String REQ_GetTaskPlanningByTask = ""
-			+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
-			+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id "
-			+ "   WHERE idTask=?";
+	+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
+	+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id "
+	+ "   WHERE idTask=?";
 	// Method
 	@Override
 	public TaskPlanning getTaskPlanningByTask(Long idTask) {
@@ -92,10 +92,10 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 	 */
 	// Query
 	private static final String REQ_GetTaskPlanningsByPeriod = ""
-			+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
-			+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id "
-			+ "   WHERE startDate>? or (startDate=? and startTime>=?) "
-			+ "   AND endDate<? or (endDate=? and endTime<=?)";
+	+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
+	+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id "
+	+ "   WHERE startDate>? or (startDate=? and startTime>=?) "
+	+ "   AND endDate<? or (endDate=? and endTime<=?)";
 	// Method
 	@Override
 	public List<TaskPlanning> getTaskPlanningsByPeriod(LocalDateTime start, LocalDateTime end) {
@@ -129,7 +129,7 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 	 */
 	// Query
 	private static final String REQ_CreateTaskPlanning = ""
-			+ "INSERT INTO TasksPlannings (idTask, startDate, startTime, endDate, endTime) VALUES (?, ?, ?, ?, ?)";
+	+ "INSERT INTO TasksPlannings (idTask, startDate, startTime, endDate, endTime) VALUES (?, ?, ?, ?, ?)";
 	// Method
 	@Override
 	public TaskPlanning createTaskPlanning(TaskPlanning taskPlanning) {
@@ -158,7 +158,7 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 	 */
 	// Query
 	private static final String REQ_UpdateTaskPlanning = ""
-			+ "UPDATE TasksPlannings SET startDate=?, startTime=?, endDate=?, endTime=? WHERE idTask=?";
+	+ "UPDATE TasksPlannings SET startDate=?, startTime=?, endDate=?, endTime=? WHERE idTask=?";
 	// Method
 	@Override
 	public Boolean updateTaskPlanning(TaskPlanning taskPlanning) {
@@ -225,8 +225,14 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 	private TaskPlanning extractTaskPlanning(ResultSet rs) throws SQLException {
 		return new TaskPlanning(
 			extractTask(rs), 
-			LocalDateTime.of(rs.getDate("startDate").toLocalDate(), rs.getTime("startTime").toLocalTime()), 
-			LocalDateTime.of(rs.getDate("endDate").toLocalDate(), rs.getTime("endTime").toLocalTime())
+			LocalDateTime.of(
+                rs.getDate("startDate").toLocalDate(),
+                rs.getTime("startTime").toLocalTime()
+            ),
+			LocalDateTime.of(
+                rs.getDate("endDate").toLocalDate(),
+                rs.getTime("endTime").toLocalTime()
+            )
 		);
 	}
 	

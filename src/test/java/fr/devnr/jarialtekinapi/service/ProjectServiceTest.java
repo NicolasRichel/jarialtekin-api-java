@@ -50,18 +50,22 @@ public class ProjectServiceTest {
         Project project = new Project(1L, "P1");
         project.setDescription("Description du projet.");
         when(projectDAO.getProjectById(eq(1L))).thenReturn(project);
+        when(projectDAO.getProjectById(eq(2L))).thenReturn(null);
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        ProjectDTO result = service.getProjectDTO(1L);
+        ProjectDTO result1 = service.getProjectDTO(1L);
+        ProjectDTO result2 = service.getProjectDTO(2L);
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(1), result.getId()),
-            () -> assertEquals("P1", result.getName()),
-            () -> assertEquals("Description du projet.", result.getDescription())
+            () -> assertEquals(Long.valueOf(1), result1.getId()),
+            () -> assertEquals("P1", result1.getName()),
+            () -> assertEquals("Description du projet.", result1.getDescription())
         );
         verify(projectDAO, times(1)).getProjectById(eq(1L));
+        assertNull(result2);
+        verify(projectDAO, times(1)).getProjectById(eq(2L));
     }
 
     @Test
@@ -115,17 +119,21 @@ public class ProjectServiceTest {
             LocalDate.of(2018, 6, 6)
         );
         when(projectDAO.getProjectById(1L)).thenReturn(project);
+        when(projectDAO.getProjectById(eq(2L))).thenReturn(null);
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        PeriodDTO result = service.getPeriodDTO(1L);
+        PeriodDTO result1 = service.getPeriodDTO(1L);
+        PeriodDTO result2 = service.getPeriodDTO(2L);
 
         // -- { ASSERT }--
         assertAll(
-            () -> assertEquals("2018-05-05", result.getStart()),
-            () -> assertEquals("2018-06-06", result.getEnd())
+            () -> assertEquals("2018-05-05", result1.getStart()),
+            () -> assertEquals("2018-06-06", result1.getEnd())
         );
         verify(projectDAO, times(1)).getProjectById(eq(1L));
+        assertNull(result2);
+        verify(projectDAO, times(1)).getProjectById(eq(2L));
     }
 
     @Test

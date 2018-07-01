@@ -13,7 +13,7 @@ import fr.devnr.jarialtekinapi.service.TaskService;
 import graphql.schema.GraphQLSchema;
 import graphql.servlet.SimpleGraphQLServlet;
 
-@WebServlet(urlPatterns = "/graphql")
+@WebServlet(urlPatterns = "/api")
 public class GraphQLEndpoint extends SimpleGraphQLServlet {
 
 	private static final TaskService taskService;

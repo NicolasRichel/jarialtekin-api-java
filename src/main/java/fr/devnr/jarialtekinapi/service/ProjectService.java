@@ -41,7 +41,11 @@ public class ProjectService {
 
     public ProjectDTO getProjectDTO(Long idProject) {
         Project project = projectDAO.getProjectById(idProject);
-        return new ProjectDTO(project.getId(), project.getName(), project.getDescription());
+        ProjectDTO dto = null;
+        if (project!=null) {
+            dto = new ProjectDTO(project.getId(), project.getName(), project.getDescription());
+        }
+        return dto;
     }
 
     public ProjectDTO getProjectByTaskDTO(Long idTask) {
@@ -58,10 +62,11 @@ public class ProjectService {
 
     public PeriodDTO getPeriodDTO(Long idProject) {
         Project project = projectDAO.getProjectById(idProject);
-        return new PeriodDTO(
-            project.getStartDate().toString(),
-            project.getEndDate().toString()
-        );
+        PeriodDTO dto = null;
+        if (project!=null) {
+            dto = new PeriodDTO(project.getStartDate().toString(), project.getEndDate().toString());
+        }
+        return dto;
     }
 
     public ProjectDTO createProject(ProjectDTO project) {

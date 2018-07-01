@@ -64,7 +64,7 @@
         history.replaceState(null, null, newSearch);
       }
       function graphQLFetcher(graphQLParams) {
-        return fetch('/graphql', {
+        return fetch('/api', {
           method: 'post',
           headers: {
             'Accept': 'application/json',

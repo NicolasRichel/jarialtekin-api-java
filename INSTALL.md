@@ -22,7 +22,9 @@ de test pour pouvoir développer localement :
  - fichier `populate_db.sql` : insertion de données de test.
 
 Le fichier `src/main/resources/db.properties` permet de configurer la connexion à
-la base de données (voir aussi : *fr.devnr.jariatekinapi.dao.factory.DataSourceFactory*).
+la base de données (voir aussi : *fr.devnr.jariatekinapi.dao.factory.DataSourceFactory*).  
+Pour se connecter à votre base de données il faut penser à renseigner les propriétés
+`DB_USERNAME` et `DB_PASSWORD`.
 
 **Remarque :** les tests inclus également un test de la base de données pour verifier 
 que le schéma (en particulier les contraintes d'intégrité) est conforme. Ces tests

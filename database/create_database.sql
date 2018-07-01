@@ -12,7 +12,7 @@
 -- -----------------
 
 DROP DATABASE IF EXISTS jarialtekin_db;
-CREATE DATABASE jarialtekin_db;
+CREATE DATABASE jarialtekin_db CHARACTER SET 'utf8';
 USE jarialtekin_db;
 
 
