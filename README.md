@@ -23,6 +23,9 @@ En plus de servir d'API pour `jarialtekin-app`, l'application possède une parti
 web app qui permet d'accéder à la documentation (actuellement très succinte et en anglais).  
 Cette documentation sera maintenue à jour et devra, à terme, servir de référence.
 
+La web app contient aussi une page '[Graph*i*QL](https://github.com/graphql/graphiql)' 
+qui permet d'explorer et de tester l'API GraphQL.
+
 Il est également possible que les développements futurs intègre un back-office dans la web app.
 
 

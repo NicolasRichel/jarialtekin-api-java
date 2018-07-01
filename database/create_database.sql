@@ -4,6 +4,7 @@
 --     JARIALTEKIN_DB
 -- =======================
 
+
 -- !!![[ This script will drop the jarialtekin_db if it already exists ]]!!!
 
 
@@ -131,3 +132,47 @@ WITH RECURSIVE Graph AS (
 )
 SELECT * FROM Graph ORDER BY idNode, dist;
 SET standard_compliant_cte=1;
+
+
+-- Functions creation
+-- ------------------
+
+DELIMITER //
+CREATE FUNCTION isValidParent(task INT, parent INT)
+RETURNS TINYINT DETERMINISTIC
+BEGIN
+	SET standard_compliant_cte=0;
+	-- If the child task is not already higher in the task tree
+	IF NOT EXISTS (SELECT * FROM TaskTree WHERE idNode=parent AND idParent=task) THEN
+		-- And if the parent task does not depends on the child task
+		IF NOT EXISTS (SELECT * FROM DependencyGraph WHERE idNode=parent AND idDependency=task) THEN
+			-- Then its OK
+			SET standard_compliant_cte=1;
+			RETURN 1;
+		END IF;
+	END IF;
+	-- Otherwise there is a problem
+	SET standard_compliant_cte=1;
+	RETURN 0;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE FUNCTION isValidDependency(task INT, dependency INT)
+RETURNS TINYINT DETERMINISTIC
+BEGIN
+	SET standard_compliant_cte=0;
+	-- If the task does not depends on a task that depends on it
+	IF NOT EXISTS (SELECT * FROM DependencyGraph WHERE idNode=dependency AND idDependency=task) THEN
+		-- And if the task does not depends on one of its child
+		IF NOT EXISTS (SELECT * FROM TasksTree WHERE idNode=dependency AND idParent=task) THEN
+			-- Then its OK
+			SET standard_compliant_cte=1;
+			RETURN 1;
+		END IF;
+	END IF;
+	-- Otherwise there is a problem
+	SET standard_compliant_cte=1;
+	RETURN 0;
+END //
+DELIMITER ;

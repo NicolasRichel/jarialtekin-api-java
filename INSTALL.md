@@ -72,3 +72,5 @@ $ mvn clean package
 ```
 $ mvn -Pdev jetty:run
 ```
+
+La web app est alors accessible en local : http://localhost:8080
