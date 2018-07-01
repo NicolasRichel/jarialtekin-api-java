@@ -19,7 +19,7 @@ vues et/ou procédures nécessaires) et de peupler cette dernière avec des donn
 de test pour pouvoir développer localement :
 
  - fichier `create_database.sql` : création de la base de données.
- - fichier `populate_db_dev.sql` : insertion de données de test.
+ - fichier `populate_db.sql` : insertion de données de test.
 
 Le fichier `src/main/resources/db.properties` permet de configurer la connexion à
 la base de données (voir aussi : *fr.devnr.jariatekinapi.dao.factory.DataSourceFactory*).
