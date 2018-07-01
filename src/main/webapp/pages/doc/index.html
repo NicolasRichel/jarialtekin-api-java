@@ -14,6 +14,12 @@
         section > p {
           margin: 24px 0;
         }
+        ul > li {
+          margin: 12px 0;
+        }
+        .underlined {
+          text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -34,7 +40,8 @@
             Its first goal is to provide an interface to access and manipulate data in
             database (CRUD operations).<br/>
             However, further developments will probably extend the funcntionalities of
-            this application to include the ability to perform more complex processing.
+            this application to include the ability to perform more complex processing.<br/>
+            To learn more about GraphQL you can <a href="https://graphql.org" target="_blank">visit this site</a>.
         </p>
     </section>
     <hr/>
@@ -46,7 +53,33 @@
         </p>
         <img src="./jarialtekin-api_structure.png"/>
         <p>
-
+            <b class="underlined">Description :</b><br/>
+            <ul>
+                <li>
+                    <b>Endpoint :</b> all requests from the front-end (jarialtekin-app) hit the
+                    GraphQL endpoint (class <i>fr.devnr.jarialtekinapi.graphql.GraphQLEndpoint</i>).
+                    It play the role of the application entrypoint.
+                </li>
+                <li>
+                    <b>Resolvers :</b> resolvers are used to map GraphQL requests to Java objects.
+                    They manipulate only DTO objects.
+                </li>
+                <li>
+                    <b>Services :</b> services contains the core of the application. First, they
+                    serve as kind of serialization/deserialization interface between DTO and Model
+                    objects. Furthermore they can perform some specific processing with DTO and
+                    Model objects.
+                </li>
+                <li>
+                    <b>DAOs (Data Access Objects) :</b> DAOs are used to extract Model ojects from the database.
+                </li>
+                <li>
+                    <b>DTOs (Data Transfer Objetcs) :</b> DTOs are intended to map GraphQL schema types.
+                </li>
+                <li>
+                    <b>Models (Model objects) :</b> Models are intended to map tables from the database schema.
+                </li>
+            </ul>
         </p>
     </section>
 </body>
