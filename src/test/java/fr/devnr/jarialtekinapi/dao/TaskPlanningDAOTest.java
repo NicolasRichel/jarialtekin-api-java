@@ -27,6 +27,7 @@ class TaskPlanningDAOTest {
 
     private static final String SQL_TestData = "src/test/resources/sql/data_TaskPlanningDAOTest.sql";
 
+
     /**
      * Initialize DB data at the beginning of each test.
      */
@@ -43,6 +44,7 @@ class TaskPlanningDAOTest {
         DBTestsUtils.emptyTables(source);
     }
 
+
     @Test
     void GetAllTaskPlannings() {
         // --{ ARRANGE }--
@@ -54,13 +56,13 @@ class TaskPlanningDAOTest {
         // --{ ASSERT }--
         assertEquals(3, plannings.size());
         TaskPlanning planning = plannings.get(0);
-        assertAll("planning",
+        assertAll(
             () -> assertEquals(Long.valueOf(1), planning.getTask().getId()),
             () -> assertEquals("T1", planning.getTask().getName()),
-            () -> assertEquals(LocalDate.of(2018, 01, 01), planning.getStartDate()),
-            () -> assertEquals(LocalTime.of(10, 15, 00), planning.getStartTime()),
-            () -> assertEquals(LocalDate.of(2018, 01, 01), planning.getEndDate()),
-            () -> assertEquals(LocalTime.of(11, 52, 00), planning.getEndTime())
+            () -> assertEquals(LocalDate.of(2018, 1, 1), planning.getStartDate()),
+            () -> assertEquals(LocalTime.of(10, 15, 0), planning.getStartTime()),
+            () -> assertEquals(LocalDate.of(2018, 1, 1), planning.getEndDate()),
+            () -> assertEquals(LocalTime.of(11, 52, 0), planning.getEndTime())
         );
     }
 
@@ -73,13 +75,13 @@ class TaskPlanningDAOTest {
         TaskPlanning planning = dao.getTaskPlanningByTask(2L);
 
         // --{ ASSERT }--
-        assertAll("planning",
-                () -> assertEquals(Long.valueOf(2), planning.getTask().getId()),
-                () -> assertEquals("T2", planning.getTask().getName()),
-                () -> assertEquals(LocalDate.of(2018, 01, 01), planning.getStartDate()),
-                () -> assertEquals(LocalTime.of(13, 30, 00), planning.getStartTime()),
-                () -> assertEquals(LocalDate.of(2018, 01, 02), planning.getEndDate()),
-                () -> assertEquals(LocalTime.of(12, 00, 00), planning.getEndTime())
+        assertAll(
+            () -> assertEquals(Long.valueOf(2), planning.getTask().getId()),
+            () -> assertEquals("T2", planning.getTask().getName()),
+            () -> assertEquals(LocalDate.of(2018, 1, 1), planning.getStartDate()),
+            () -> assertEquals(LocalTime.of(13, 30, 0), planning.getStartTime()),
+            () -> assertEquals(LocalDate.of(2018, 1, 2), planning.getEndDate()),
+            () -> assertEquals(LocalTime.of(12, 0, 0), planning.getEndTime())
         );
     }
 
@@ -87,22 +89,36 @@ class TaskPlanningDAOTest {
     void GetTaskPlanningsByPeriod() {
         // --{ ARRANGE }--
         TaskPlanningDAO dao = factory.getTaskPlanningDAO();
-        LocalDateTime start = LocalDateTime.of(LocalDate.of(2018, 01, 01), LocalTime.of(8, 00, 00));
-        LocalDateTime end = LocalDateTime.of(LocalDate.of(2018, 01, 02), LocalTime.of(11, 00, 00));
+        LocalDateTime start = LocalDateTime.of(
+            LocalDate.of(2018, 1, 1),
+            LocalTime.of(8, 0, 0)
+        );
+        LocalDateTime end = LocalDateTime.of(
+            LocalDate.of(2018, 1, 2),
+            LocalTime.of(11, 0, 0)
+        );
 
         // --{ ACT }--
-        List<TaskPlanning> plannings = dao.getTaskPlanningsByPeriod(start, end);
+        List<TaskPlanning> result = dao.getTaskPlanningsByPeriod(start, end);
 
         // --{ ASSERT }--
-        assertEquals(2, plannings.size());
+        assertEquals(2, result.size());
+        TaskPlanning planning = result.get(0);
+        assertAll(
+            () -> assertEquals(Long.valueOf(1), planning.getTask().getId()),
+            () -> assertEquals(LocalDate.of(2018, 1, 1), planning.getStartDate()),
+            () -> assertEquals(LocalTime.of(10, 15, 0), planning.getStartTime()),
+            () -> assertEquals(LocalDate.of(2018, 1, 1), planning.getEndDate()),
+            () -> assertEquals(LocalTime.of(11, 52, 0), planning.getEndTime())
+        );
     }
 
     @Test
     void CreateTaskPlanning() {
         // --{ ARRANGE }--
         TaskPlanningDAO dao = factory.getTaskPlanningDAO();
-        LocalDateTime start = LocalDateTime.of(LocalDate.of(2018, 01, 03), LocalTime.of(9, 30, 0));
-        LocalDateTime end = LocalDateTime.of(LocalDate.of(2018, 01, 03), LocalTime.of(11, 0, 0));
+        LocalDateTime start = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(9, 30, 0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(11, 0, 0));
         TaskPlanning planning = new TaskPlanning(new Task(4L, "T4"), start, end);
 
         // --{ ACT }--
@@ -111,10 +127,10 @@ class TaskPlanningDAOTest {
 
         // --{ ASSERT }--
         assertEquals(4, plannings.size());
-        assertAll("planning",
+        assertAll(
             () -> assertEquals(Long.valueOf(4), createdPlanning.getTask().getId()),
             () -> assertEquals("T4", createdPlanning.getTask().getName()),
-            () -> assertEquals(LocalDate.of(2018, 01, 03), createdPlanning.getStartDate()),
+            () -> assertEquals(LocalDate.of(2018, 1, 3), createdPlanning.getStartDate()),
             () -> assertEquals(LocalTime.of(11, 0, 0), createdPlanning.getEndTime())
         );
     }
@@ -123,8 +139,8 @@ class TaskPlanningDAOTest {
     void UpdateTaskPlanning() {
         // --{ ARRANGE }--
         TaskPlanningDAO dao = factory.getTaskPlanningDAO();
-        LocalDateTime start = LocalDateTime.of(LocalDate.of(2018, 01, 03), LocalTime.of(9, 30, 0));
-        LocalDateTime end = LocalDateTime.of(LocalDate.of(2018, 01, 03), LocalTime.of(11, 0, 0));
+        LocalDateTime start = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(9, 30, 0));
+        LocalDateTime end = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(11, 0, 0));
         TaskPlanning planning = new TaskPlanning(new Task(3L, "T3"), start, end);
 
         // --{ ACT }--
@@ -133,9 +149,9 @@ class TaskPlanningDAOTest {
 
         // --{ ASSERT }--
         assertTrue(isUpdated);
-        assertAll("planning",
+        assertAll(
             () -> assertEquals(Long.valueOf(3), updatedPlanning.getTask().getId()),
-            () -> assertEquals(LocalDate.of(2018, 01, 03), updatedPlanning.getStartDate()),
+            () -> assertEquals(LocalDate.of(2018, 1, 3), updatedPlanning.getStartDate()),
             () -> assertEquals(LocalTime.of(11, 0, 0), updatedPlanning.getEndTime())
         );
     }

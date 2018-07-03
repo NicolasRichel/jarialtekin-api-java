@@ -6,7 +6,7 @@
 
   <groupId>nico_dev_projects</groupId>
   <artifactId>jarialtekin-api</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>jarialtekinapi</name>
@@ -30,6 +30,7 @@
     <junitPlatformVersion>1.0.0-M4</junitPlatformVersion>
     <junitVintageVersion>4.12.0-M4</junitVintageVersion>
     <!-- Plugins Versions -->
+    <jettyMavenPluginVersion>9.4.6.v20170531</jettyMavenPluginVersion>
     <mvnCompilerPluginVersion>3.7.0</mvnCompilerPluginVersion>
     <mvnSurefirePluginVersion>2.19.1</mvnSurefirePluginVersion>
     <mvnWarPluginVersion>3.1.0</mvnWarPluginVersion>
@@ -123,7 +124,7 @@
           </includes>
           <properties>
             <!-- <includeTags>db_tests</includeTags> -->
-            <!-- <excludeTags>db_tests</excludeTags> -->
+            <excludeTags>db_tests</excludeTags>
           </properties>
         </configuration>
         <dependencies>
@@ -146,4 +147,22 @@
       </plugin>
     </plugins>
   </build>
+
+  <!-- Build Profiles -->
+  <!-- ~~~~~~~~~~~~~~ -->
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jettyMavenPluginVersion}</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  <!-- ~~~~~~~~~~~~~~ -->
 </project>

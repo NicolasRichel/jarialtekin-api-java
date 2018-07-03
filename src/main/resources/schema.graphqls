@@ -7,42 +7,45 @@ schema {
 	mutation: Mutation
 }
 
+
 # Queries
 # =======
 type Query {
 	
 	# Task queries :
 	allTasks: [Task]!
-	allTasksInPeriod(period: Period!): [Task]!
+	allTasksInPeriod(period: PeriodInput!): [Task]!
 	task(id: Int!): Task
 	
 	# Project queries :
 	allProjects: [Project]!
 	project(id: Int!): Project
+	taskProject(id: Int!): Project
 	projectTasks(id: Int!): [Task]!
 }
+
 
 # Mutations
 # =========
 type Mutation {
 	
 	# Task mutations :
-	createTask(task: Task!): Task
-	updateTask(task: Task!): Boolean
+	createTask(task: TaskInput!): Task
+	updateTask(task: TaskInput!): Boolean
 	deleteTask(id: Int!): Boolean
 	
 	# Project mutations :
-	createProject(project: Project!): Project
-	updateProject(project: Project!): Boolean
+	createProject(project: ProjectInput!): Project
+	updateProject(project: ProjectInput!): Boolean
 	deleteProject(id: Int!): Boolean
 }
+
 
 # Basic Types
 # ===========
 type Period {
-	startDateTime: String
-	endDateTime: String
-	duration(unit: TimeUnit=HOUR): Float
+	start: String
+	end: String
 }
 
 type Project {
@@ -59,8 +62,25 @@ type Task {
 	planning: Period
 }
 
+
 # Input Types
 # ===========
+input PeriodInput {
+    start: String
+    end: String
+}
+
+input TaskInput {
+    id: Int
+    name: String!
+    description: String
+}
+
+input ProjectInput {
+	id: Int
+	name: String!
+	description: String
+}
 
 
 # Enum Types
@@ -71,5 +91,6 @@ enum TimeUnit {
 	DAY
 	WEEK
 	MONTH
+	YEAR
 }
 

@@ -85,9 +85,9 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	 */
 	// Query
 	private static final String REQ_GetParentTask = ""
-			+ "SELECT id, name, description, priority, status "
-			+ "   FROM Tasks t JOIN ParentTasks p ON t.id=p.idParent "
-			+ "   WHERE p.idTask=?";
+	+ "SELECT id, name, description, priority, status "
+	+ "   FROM Tasks t JOIN ParentTasks p ON t.id=p.idParent "
+	+ "   WHERE p.idTask=?";
 	// Method
 	@Override
 	public Task getParentTask(Long idTask) {
@@ -117,9 +117,9 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	 */
 	// Query
 	private static final String REQ_GetSubTasks = ""
-			+ "SELECT id, name, description, priority, status "
-			+ "   FROM Tasks t JOIN ParentTasks p ON t.id=p.idTask "
-			+ "   WHERE p.idParent=?";
+	+ "SELECT id, name, description, priority, status "
+	+ "   FROM Tasks t JOIN ParentTasks p ON t.id=p.idTask "
+	+ "   WHERE p.idParent=?";
 	// Method
 	@Override
 	public List<Task> getSubTasks(Long idTask) {
@@ -149,9 +149,9 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	 */
 	// Query
 	private static final String REQ_GetTaskDependencies = ""
-			+ "SELECT id, name, description, priority, status "
-			+ "   FROM Tasks t JOIN TasksDependencies d ON d.idDependency=t.id "
-			+ "   WHERE d.idTask=?";
+	+ "SELECT id, name, description, priority, status "
+	+ "   FROM Tasks t JOIN TasksDependencies d ON d.idDependency=t.id "
+	+ "   WHERE d.idTask=?";
 	// Method
 	@Override
 	public List<Task> getTaskDependencies(Long idTask) {
@@ -181,7 +181,7 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	 */
 	// Query
 	private static final String REQ_CreateTask = ""
-			+ "INSERT INTO Tasks (id, name, description, priority, status) VALUES (NULL, ?, ?, ?, ?)";
+	+ "INSERT INTO Tasks (id, name, description, priority, status) VALUES (NULL, ?, ?, ?, ?)";
 	// Method
 	@Override
 	public Task createTask(Task task) {
@@ -215,7 +215,7 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	 */
 	// Query
 	private static final String REQ_UpdateTask = ""
-			+ "UPDATE Tasks SET name=?, description=?, priority=?, status=? WHERE id=?";
+	+ "UPDATE Tasks SET name=?, description=?, priority=?, status=? WHERE id=?";
 	// Method
 	@Override
 	public Boolean updateTask(Task task) {

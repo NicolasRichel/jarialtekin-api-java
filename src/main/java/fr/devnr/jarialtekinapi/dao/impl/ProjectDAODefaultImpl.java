@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	
 
 	/**
-	 * Get all projects in database (i.e. the while content of the Projects table).
+	 * Get all projects in database (i.e. the whole content of the Projects table).
 	 */
 	// Query
 	private static final String REQ_GetAllProjects = "SELECT * FROM Projects";
@@ -69,7 +70,7 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 		PreparedStatement stmt = c.prepareStatement(REQ_GetProjectById)) {
 			
 			stmt.setLong(1, idProject);
-			try(ResultSet rs = stmt.executeQuery();) {
+			try(ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
 					project = extractProject(rs);
 				}
@@ -83,11 +84,44 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	}
 
 	/**
+	 *
+	 */
+	// Query
+	private static final String REQ_GetProjectByTask = ""
+    + "SELECT p.id, p.name, p.description, p.startDate, p.endDate "
+    + "   FROM Projects p "
+    + "   JOIN ProjectsTasks t ON p.id=t.idProject"
+    + "   WHERE t.idTask=?";
+	// Method
+	@Override
+	public Project getProjectByTask(Long idTask) {
+
+	    Project project = null;
+
+	    try(
+        Connection c = source.getConnection();
+        PreparedStatement stmt = c.prepareStatement(REQ_GetProjectByTask)) {
+
+	        stmt.setLong(1, idTask);
+	        try(ResultSet rs = stmt.executeQuery()) {
+	            if(rs.next()) {
+	                project = extractProject(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+	        e.printStackTrace();
+        }
+
+	    return project;
+    }
+
+	/**
 	 * Create a new project in database.
 	 */
 	// Query
 	private static final String REQ_CreateProject = ""
-			+ "INSERT INTO Projects (id, name, description, startDate, endDate) VALUES (NULL, ?, ?, ?, ?)";
+    + "INSERT INTO Projects (id, name, description, startDate, endDate) VALUES (NULL, ?, ?, ?, ?)";
 	// Method
 	@Override
 	public Project createProject(Project project) {
@@ -121,7 +155,7 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	 */
 	// Query
 	private static final String REQ_UpdateProject = ""
-			+ "UPDATE Projects SET name=?, description=?, startDate=?, endDate=? WHERE id=?";
+    + "UPDATE Projects SET name=?, description=?, startDate=?, endDate=? WHERE id=?";
 	// Method
 	@Override
 	public Boolean updateProject(Project project) {
@@ -178,9 +212,9 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	 */
 	// Query
 	private static final String REQ_GetProjectTasks = ""
-			+ "SELECT t.id, t.name, t.description, t.priority, t.status"
-			+ "   FROM ProjectsTasks p JOIN Tasks t ON p.idTask=t.id"
-			+ "   WHERE p.idProject=?";
+    + "SELECT t.id, t.name, t.description, t.priority, t.status"
+    + "   FROM ProjectsTasks p JOIN Tasks t ON p.idTask=t.id"
+    + "   WHERE p.idProject=?";
 	// Method
 	@Override
 	public List<Task> getProjectTasks(Long idProject) {
@@ -218,12 +252,14 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	 * @throws SQLException
 	 */
 	private Project extractProject(ResultSet rs) throws SQLException {
+		Date startDate = rs.getDate("startDate");
+		Date endDate = rs.getDate("endDate");
 		return new Project(
 			rs.getLong("id"),
 			rs.getString("name"),
 			rs.getString("description"),
-			rs.getDate("startDate").toLocalDate(),
-			rs.getDate("endDate").toLocalDate()
+			startDate!=null ? startDate.toLocalDate() : null,
+			endDate!=null ? endDate.toLocalDate() : null
 		);
 	}
 	
