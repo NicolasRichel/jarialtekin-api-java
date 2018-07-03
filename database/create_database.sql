@@ -5,7 +5,7 @@
 -- =======================
 
 
--- !!![[ This script will drop the jarialtekin_db if it already exists ]]!!!
+-- !!![[ This script will drop 'jarialtekin_db' if it already exists ]]!!!
 
 
 -- Database creation
