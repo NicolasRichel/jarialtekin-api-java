@@ -71,13 +71,13 @@ input PeriodInput {
 }
 
 input TaskInput {
-    id: Int!
+    id: Int
     name: String!
     description: String
 }
 
 input ProjectInput {
-	id: Int!
+	id: Int
 	name: String!
 	description: String
 }

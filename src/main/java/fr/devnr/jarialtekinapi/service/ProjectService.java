@@ -50,7 +50,11 @@ public class ProjectService {
 
     public ProjectDTO getProjectByTaskDTO(Long idTask) {
         Project project = projectDAO.getProjectByTask(idTask);
-        return new ProjectDTO(project.getId(), project.getName(), project.getDescription());
+        ProjectDTO dto = null;
+        if (project!=null) {
+            dto = new ProjectDTO(project.getId(), project.getName(), project.getDescription());
+        }
+        return dto;
     }
 
     public List<TaskDTO> getProjectTasksDTO(Long idProject) {
@@ -81,7 +85,9 @@ public class ProjectService {
     }
 
     public Boolean updateProject(ProjectDTO project) {
-        Project newProject = new Project(null, project.getName());
+        //Project newProject = new Project(null, project.getName());
+        Project newProject = projectDAO.getProjectById(project.getId());
+        newProject.setName(project.getName());
         newProject.setDescription(project.getDescription());
         return projectDAO.updateProject(newProject);
     }

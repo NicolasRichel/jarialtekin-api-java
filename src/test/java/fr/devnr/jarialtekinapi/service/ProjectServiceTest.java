@@ -73,17 +73,21 @@ public class ProjectServiceTest {
         // --{ ARRANGE }--
         Project project = new Project(100L, "P1");
         when(projectDAO.getProjectByTask(eq(1L))).thenReturn(project);
+        when(projectDAO.getProjectByTask(eq(2L))).thenReturn(null);
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        ProjectDTO result = service.getProjectByTaskDTO(1L);
+        ProjectDTO result1 = service.getProjectByTaskDTO(1L);
+        ProjectDTO result2 = service.getProjectByTaskDTO(2L);
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(100), result.getId()),
-            () -> assertEquals("P1", result.getName())
+            () -> assertEquals(Long.valueOf(100), result1.getId()),
+            () -> assertEquals("P1", result1.getName())
         );
         verify(projectDAO, times(1)).getProjectByTask(eq(1L));
+        assertNull(result2);
+        verify(projectDAO, times(1)).getProjectByTask(eq(2L));
     }
 
     @Test
@@ -160,6 +164,8 @@ public class ProjectServiceTest {
     @Test
     void UpdateProject() {
         // --{ ARRANGE }--
+        Project project = new Project(22L, "P22");
+        when(projectDAO.getProjectById(eq(22L))).thenReturn(project);
         when(projectDAO.updateProject(any(Project.class))).thenReturn(Boolean.TRUE);
         ProjectService service = new ProjectService(projectDAO);
 
@@ -169,7 +175,9 @@ public class ProjectServiceTest {
 
         // --{ ASSERT }--
         assertTrue(result);
+        verify(projectDAO, times(1)).getProjectById(eq(22L));
         verify(projectDAO, times(1)).updateProject(any(Project.class));
+        verifyNoMoreInteractions(projectDAO);
     }
 
     @Test

@@ -197,6 +197,8 @@ class TaskServiceTest {
     @Test
     void UpdateTask() {
         // --{ ARRANGE }--
+        Task task = new Task(12L, "T12");
+        when(taskDAO.getTaskById(eq(12L))).thenReturn(task);
         when(taskDAO.updateTask(any(Task.class))).thenReturn(Boolean.TRUE);
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
@@ -206,7 +208,9 @@ class TaskServiceTest {
 
         // --{ ASSERT }--
         assertTrue(result);
+        verify(taskDAO, times(1)).getTaskById(eq(12L));
         verify(taskDAO, times(1)).updateTask(any(Task.class));
+        verifyNoMoreInteractions(taskDAO);
     }
 
     @Test

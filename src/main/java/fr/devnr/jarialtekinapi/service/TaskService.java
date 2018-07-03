@@ -119,7 +119,9 @@ public class TaskService {
 	}
 
 	public Boolean updateTask(TaskDTO task) {
-        Task newTask = new Task(task.getId(), task.getName());
+        //Task newTask = new Task(task.getId(), task.getName());
+		Task newTask = taskDao.getTaskById(task.getId());
+		newTask.setName(task.getName());
         newTask.setDescription(task.getDescription());
     	return taskDao.updateTask(newTask);
 	}
