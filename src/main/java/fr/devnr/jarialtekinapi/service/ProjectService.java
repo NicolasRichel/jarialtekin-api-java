@@ -85,7 +85,6 @@ public class ProjectService {
     }
 
     public Boolean updateProject(ProjectDTO project) {
-        //Project newProject = new Project(null, project.getName());
         Project newProject = projectDAO.getProjectById(project.getId());
         newProject.setName(project.getName());
         newProject.setDescription(project.getDescription());

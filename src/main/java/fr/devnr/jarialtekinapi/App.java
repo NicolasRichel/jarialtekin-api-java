@@ -1,13 +1,12 @@
 package fr.devnr.jarialtekinapi;
 
 /**
- * Hello world!
- *
+ * Main Class
  */
 public class App {
 	
 	public static void main( String[] args ) {
-		System.out.println( "Hello World!" );
+		System.out.println( "Application started." );
 	}
 	
 }

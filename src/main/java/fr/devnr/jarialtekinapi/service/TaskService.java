@@ -1,9 +1,6 @@
 package fr.devnr.jarialtekinapi.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,7 +116,6 @@ public class TaskService {
 	}
 
 	public Boolean updateTask(TaskDTO task) {
-        //Task newTask = new Task(task.getId(), task.getName());
 		Task newTask = taskDao.getTaskById(task.getId());
 		newTask.setName(task.getName());
         newTask.setDescription(task.getDescription());
