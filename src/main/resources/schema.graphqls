@@ -11,6 +11,9 @@ schema {
 # Queries
 # =======
 type Query {
+
+    allPriorities: [Priority]!
+    allStatuses: [Status]!
 	
 	# Task queries :
 	allTasks: [Task]!
@@ -43,6 +46,16 @@ type Mutation {
 
 # Basic Types
 # ===========
+type Priority {
+    index: Int!
+    label: String!
+}
+
+type Status {
+    index: Int!
+    label: String!
+}
+
 type Period {
 	start: String
 	end: String

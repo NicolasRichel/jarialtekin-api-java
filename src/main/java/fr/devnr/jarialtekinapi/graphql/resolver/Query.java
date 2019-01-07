@@ -1,13 +1,15 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import fr.devnr.jarialtekinapi.dto.PeriodDTO;
-import fr.devnr.jarialtekinapi.dto.ProjectDTO;
-import fr.devnr.jarialtekinapi.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.dto.*;
+import fr.devnr.jarialtekinapi.model.Priority;
+import fr.devnr.jarialtekinapi.model.Status;
 import fr.devnr.jarialtekinapi.service.ProjectService;
 import fr.devnr.jarialtekinapi.service.TaskService;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Query implements GraphQLQueryResolver {
 
@@ -26,6 +28,18 @@ public class Query implements GraphQLQueryResolver {
     // ==============
     // Public Methods
     // ==============
+
+    public List<PriorityDTO> allPriorities() {
+        return Arrays.stream(Priority.values())
+            .map(p -> new PriorityDTO(p.getValue(), p.toString()))
+            .collect(Collectors.toList());
+    }
+
+    public List<StatusDTO> allStatuses() {
+        return Arrays.stream(Status.values())
+            .map(s -> new StatusDTO(s.getValue(), s.toString()))
+            .collect(Collectors.toList());
+    }
 
     /** Task Queries */
     /** ------------ */
