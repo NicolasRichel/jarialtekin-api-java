@@ -15,4 +15,5 @@ public class StatusDTO {
 
     public Integer getIndex() { return index; }
     public String getLabel() { return label; }
+
 }
