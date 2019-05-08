@@ -19,32 +19,30 @@ import fr.devnr.jarialtekinapi.model.Status;
 import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.model.TaskPlanning;
 
+
 public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 
 	private final DataSource source;
-	
+
+
 	public TaskPlanningDAODefaultImpl(DataSource ds) {
 		this.source = ds;
 	}
-	
-	
-	/**
-	 * Return all task plannings in the database (i.e. the whole content of TasksPlannings table).
-	 */
-	// Query
-	private static final String REQ_GetAllTaskPlannings = ""
+
+
+	private static final String QUERY_GetAllTaskPlannings = ""
 	+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
 	+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id";
-	// Method
 	@Override
 	public List<TaskPlanning> getAllTaskPlannings() {
 		
 		List<TaskPlanning> plannings = new ArrayList<>();
 		
 		try (
-		Connection c = source.getConnection();
-		Statement stmt = c.createStatement();
-		ResultSet rs = stmt.executeQuery(REQ_GetAllTaskPlannings)) {
+		  Connection c = source.getConnection();
+		  Statement stmt = c.createStatement();
+		  ResultSet rs = stmt.executeQuery(QUERY_GetAllTaskPlannings)
+		) {
 			
 			while (rs.next()) {
 				plannings.add(extractTaskPlanning(rs));
@@ -56,24 +54,21 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		
 		return plannings;
 	}
-	
-	/**
-	 * Get the task planning associated to a given task.
-	 */
-	// Query
-	private static final String REQ_GetTaskPlanningByTask = ""
+
+
+	private static final String QUERY_GetTaskPlanningByTask = ""
 	+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
 	+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id "
 	+ "   WHERE idTask=?";
-	// Method
 	@Override
 	public TaskPlanning getTaskPlanningByTask(Long idTask) {
 		
 		TaskPlanning planning = null;
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskPlanningByTask)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_GetTaskPlanningByTask)
+		) {
 			
 			stmt.setLong(1, idTask);
 			try (ResultSet rs = stmt.executeQuery()) {
@@ -87,24 +82,21 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		return planning;
 	}
 
-	/**
-	 * Get all task plannings within a given period.
-	 */
-	// Query
-	private static final String REQ_GetTaskPlanningsByPeriod = ""
+
+	private static final String QUERY_GetTaskPlanningsByPeriod = ""
 	+ "SELECT id, name, description, priority, status, startDate, startTime, endDate, endTime "
 	+ "   FROM TasksPlannings p JOIN Tasks t ON p.idTask=t.id "
 	+ "   WHERE startDate>? or (startDate=? and startTime>=?) "
 	+ "   AND endDate<? or (endDate=? and endTime<=?)";
-	// Method
 	@Override
 	public List<TaskPlanning> getTaskPlanningsByPeriod(LocalDateTime start, LocalDateTime end) {
 		
 		List<TaskPlanning> plannings = new ArrayList<>();
 		
 		try (
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskPlanningsByPeriod)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_GetTaskPlanningsByPeriod)
+		) {
 			
 			stmt.setDate(1, Date.valueOf(start.toLocalDate()));
             stmt.setDate(2, Date.valueOf(start.toLocalDate()));
@@ -124,19 +116,16 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		return plannings;
 	}
 
-	/**
-	 * Add a new entry in the TasksPlannings table.
-	 */
-	// Query
-	private static final String REQ_CreateTaskPlanning = ""
+
+	private static final String QUERY_CreateTaskPlanning = ""
 	+ "INSERT INTO TasksPlannings (idTask, startDate, startTime, endDate, endTime) VALUES (?, ?, ?, ?, ?)";
-	// Method
 	@Override
 	public TaskPlanning createTaskPlanning(TaskPlanning taskPlanning) {
 		
 		try (
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_CreateTaskPlanning)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_CreateTaskPlanning)
+		) {
 			
 			stmt.setLong(1, taskPlanning.getTask().getId());
 			stmt.setDate(2, Date.valueOf(taskPlanning.getStart().toLocalDate()));
@@ -153,21 +142,18 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		return taskPlanning;
 	}
 
-	/**
-	 * Update an entry in the TasksPlannings table.
-	 */
-	// Query
-	private static final String REQ_UpdateTaskPlanning = ""
+
+	private static final String QUERY_UpdateTaskPlanning = ""
 	+ "UPDATE TasksPlannings SET startDate=?, startTime=?, endDate=?, endTime=? WHERE idTask=?";
-	// Method
 	@Override
 	public Boolean updateTaskPlanning(TaskPlanning taskPlanning) {
 		
 		Boolean success = false;
 		
 		try (
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_UpdateTaskPlanning)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_UpdateTaskPlanning)
+		) {
 			
 			stmt.setDate(1, Date.valueOf(taskPlanning.getStart().toLocalDate()));
 			stmt.setTime(2, Time.valueOf(taskPlanning.getStart().toLocalTime()));
@@ -184,20 +170,18 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		return success;
 	}
 
-	/**
-	 * Delete an entry in the TasksPlanning table.
-	 */
-	// Query
-	private static final String REQ_DeleteTaskPlanning = "DELETE FROM TasksPlannings WHERE idTask=?";
-	// Method
+
+	private static final String REQ_DeleteTaskPlanning = ""
+	+ "DELETE FROM TasksPlannings WHERE idTask=?";
 	@Override
 	public Boolean deleteTaskPlanning(Long idTask) {
 		
 		Boolean success = false;
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_DeleteTaskPlanning)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(REQ_DeleteTaskPlanning)
+		) {
 			
 			stmt.setLong(1, idTask);
 			
@@ -209,12 +193,9 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
 		
 		return success;
 	}
-	
-	
-	// =================
-	//  Private Methods
-	// =================
-	
+
+
+
 	/**
 	 * Extract a task planning from the given result set.
 	 * 
@@ -235,7 +216,7 @@ public class TaskPlanningDAODefaultImpl implements TaskPlanningDAO {
             )
 		);
 	}
-	
+
 	/**
 	 * Extract a task from the given result set.
 	 * 

@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class Config {
 
     private static final Logger logger = Logger.getLogger("config-logger");
@@ -15,10 +16,6 @@ public class Config {
     private static final String DEFAULT_CONFIG_FILE = "/application.properties";
     private static final String DEFAULT_DB_CONFIG_FILE = "/db.properties";
 
-
-    // ================
-    //  PUBLIC METHODS
-    // ================
 
     /**
      * Get a property value from the default configuration file.
@@ -83,9 +80,6 @@ public class Config {
     }
 
 
-    // =================
-    //  PRIVATE METHODS
-    // =================
 
     private static Properties loadPropertyFile(String filename) {
         String file = filename!=null ? filename : DEFAULT_CONFIG_FILE;

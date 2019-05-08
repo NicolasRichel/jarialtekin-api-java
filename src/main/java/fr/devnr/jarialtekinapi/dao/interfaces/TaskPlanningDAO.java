@@ -5,15 +5,16 @@ import java.util.List;
 
 import fr.devnr.jarialtekinapi.model.TaskPlanning;
 
+
 public interface TaskPlanningDAO {
-	
+
 	/**
 	 * Return all task plannings in the database (i.e. the whole content of TasksPlannings table).
 	 * 
 	 * @return the list of all tasks plannings in database
 	 */
 	List<TaskPlanning> getAllTaskPlannings();
-	
+
 	/**
 	 * Get the task planning associated to a given task.
 	 * 
@@ -21,7 +22,7 @@ public interface TaskPlanningDAO {
 	 * @return the corresponding task planning
 	 */
 	TaskPlanning getTaskPlanningByTask(Long idTask);
-	
+
 	/**
 	 * Get all task plannings within a given period.
 	 * 
@@ -30,7 +31,7 @@ public interface TaskPlanningDAO {
 	 * @return the list of task plannings in this period (possibly an empty list if there is none)
 	 */
 	List<TaskPlanning> getTaskPlanningsByPeriod(LocalDateTime start, LocalDateTime end);
-	
+
 	/**
 	 * Add a new entry in the TasksPlannings table.
 	 * 
@@ -38,7 +39,7 @@ public interface TaskPlanningDAO {
 	 * @return the added task planning
 	 */
 	TaskPlanning createTaskPlanning(TaskPlanning taskPlanning);
-	
+
 	/**
 	 * Update an entry in the TasksPlannings table.
 	 * Note : a task planning is identified by its task id.
@@ -47,7 +48,7 @@ public interface TaskPlanningDAO {
 	 * @return <code>true</code> if the operation succeed, <code>false</code> otherwise
 	 */
 	Boolean updateTaskPlanning(TaskPlanning taskPlanning);
-	
+
 	/**
 	 * Delete an entry in the TasksPlanning table.
 	 * 

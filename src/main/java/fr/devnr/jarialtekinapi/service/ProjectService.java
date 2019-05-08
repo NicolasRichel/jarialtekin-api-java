@@ -11,12 +11,11 @@ import fr.devnr.jarialtekinapi.model.Project;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class ProjectService {
 
     private final ProjectDAO projectDAO;
 
-    // Constructors
-    // ============
 
     public ProjectService(ProjectDAO projectDAO) {
         this.projectDAO = projectDAO;
@@ -27,10 +26,6 @@ public class ProjectService {
         this.projectDAO = factory.getProjectDAO();
     }
 
-
-    // ==============
-    // Public Methods
-    // ==============
 
     public List<ProjectDTO> getAllProjectsDTO() {
         return projectDAO.getAllProjects()

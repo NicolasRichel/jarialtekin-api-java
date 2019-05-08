@@ -11,23 +11,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class Query implements GraphQLQueryResolver {
 
     private TaskService taskService;
     private ProjectService projectService;
 
-    // Constructors
-    // ============
 
     public Query(TaskService taskService, ProjectService projectService) {
         this.taskService = taskService;
         this.projectService = projectService;
     }
 
-
-    // ==============
-    // Public Methods
-    // ==============
 
     public List<PriorityDTO> allPriorities() {
         return Arrays.stream(Priority.values())
@@ -41,8 +36,7 @@ public class Query implements GraphQLQueryResolver {
             .collect(Collectors.toList());
     }
 
-    /** Task Queries */
-    /** ------------ */
+
     public List<TaskDTO> allTasks() {
         return taskService.getAllTasksDTO();
     }
@@ -54,10 +48,8 @@ public class Query implements GraphQLQueryResolver {
     public TaskDTO task(Long idTask) {
         return taskService.getTaskDTO(idTask);
     }
-    /** ------------ */
 
-    /** Project Queries */
-    /** --------------- */
+
     public List<ProjectDTO> allProjects() {
         return projectService.getAllProjectsDTO();
     }
@@ -73,6 +65,5 @@ public class Query implements GraphQLQueryResolver {
     public List<TaskDTO> projectTasks(Long idProject) {
         return projectService.getProjectTasksDTO(idProject);
     }
-    /** --------------- */
 
 }

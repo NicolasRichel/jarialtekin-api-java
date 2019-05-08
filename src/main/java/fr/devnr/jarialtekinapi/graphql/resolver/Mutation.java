@@ -6,13 +6,12 @@ import fr.devnr.jarialtekinapi.dto.TaskDTO;
 import fr.devnr.jarialtekinapi.service.ProjectService;
 import fr.devnr.jarialtekinapi.service.TaskService;
 
+
 public class Mutation implements GraphQLMutationResolver {
 
     private TaskService taskService;
     private ProjectService projectService;
 
-    // Constructors
-    // ============
 
     public Mutation(TaskService taskService, ProjectService projectService) {
         this.taskService = taskService;
@@ -20,12 +19,6 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
 
-    // ==============
-    // Public Methods
-    // ==============
-
-    /** Task Mutations */
-    /** ============== */
     public TaskDTO createTask(TaskDTO task) {
         return taskService.createTask(task);
     }
@@ -37,10 +30,8 @@ public class Mutation implements GraphQLMutationResolver {
     public Boolean deleteTask(Long idTask) {
         return taskService.deleteTask(idTask);
     }
-    /** ============== */
 
-    /** Project Mutations */
-    /** ================= */
+
     public ProjectDTO createProject(ProjectDTO project) {
         return projectService.createProject(project);
     }
@@ -52,6 +43,5 @@ public class Mutation implements GraphQLMutationResolver {
     public Boolean deleteProject(Long idProject) {
         return projectService.deleteProject(idProject);
     }
-    /** ================= */
 
 }

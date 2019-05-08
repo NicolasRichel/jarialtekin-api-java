@@ -13,13 +13,12 @@ import fr.devnr.jarialtekinapi.dto.TaskDTO;
 import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.model.TaskPlanning;
 
+
 public class TaskService {
-	
+
 	private final TaskDAO taskDao;
 	private final TaskPlanningDAO taskPlanningDao;
-	
-	//  Constructors
-	// ==============
+
 
     public TaskService(TaskDAO taskDAO, TaskPlanningDAO taskPlanningDAO) {
         this.taskDao = taskDAO;
@@ -39,12 +38,8 @@ public class TaskService {
 		this.taskDao = daoFactory.getTaskDAO();
 		this.taskPlanningDao = daoFactory.getTaskPlanningDAO();
 	}
-	
-	
-	// ================
-	//  Public Methods
-	// ================
-	
+
+
 	public List<Task> getAllTasksModel() {
 		return taskDao.getAllTasks()
 			.stream()

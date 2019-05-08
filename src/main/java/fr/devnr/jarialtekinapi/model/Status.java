@@ -1,16 +1,21 @@
 package fr.devnr.jarialtekinapi.model;
 
+
 public enum Status {
-	
+
 	NONE(-1),
 	TODO(0),
 	DOING(1),
 	DONE(2);
-	
+
 	private Integer value;
-	
-	Status(Integer value) { this.value = value; }
-	
+
+
+	Status(Integer value) {
+		this.value = value;
+	}
+
+
 	public Integer getValue() { return this.value; }
 
 	public static Status valueOf(int n) {
@@ -22,4 +27,5 @@ public enum Status {
 			default: return Status.NONE;
 		}
 	}
+
 }

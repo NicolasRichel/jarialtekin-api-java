@@ -5,15 +5,16 @@ import java.util.List;
 import fr.devnr.jarialtekinapi.model.Project;
 import fr.devnr.jarialtekinapi.model.Task;
 
+
 public interface ProjectDAO {
-	
+
 	/**
 	 * Get all projects in database (i.e. the whole content of the Projects table).
 	 * 
 	 * @return the list of all projects
 	 */
 	List<Project> getAllProjects();
-	
+
 	/**
 	 * Get the project identified by <code>idProject</code>.
 	 * 
@@ -29,7 +30,7 @@ public interface ProjectDAO {
 	 * @return the project the task is associated to
 	 */
 	Project getProjectByTask(Long idTask);
-	
+
 	/**
 	 * Create a new project in database.
 	 * Note : the given project should not have its id setted yet 
@@ -39,7 +40,7 @@ public interface ProjectDAO {
 	 * @return the created project (with a newly generated id)
 	 */
 	Project createProject(Project project);
-	
+
 	/**
 	 * Update the specified project.
 	 * 
@@ -47,7 +48,7 @@ public interface ProjectDAO {
 	 * @return <code>true</code> if the project has been successfuly updated, <codde>false</code> otherwise
 	 */
 	Boolean updateProject(Project project);
-	
+
 	/**
 	 * Delete the specified project (identified by <code>idProject</code>).
 	 * 
@@ -55,7 +56,7 @@ public interface ProjectDAO {
 	 * @return <code>true</code> if the project has been successfuly deleted, <codde>false</code> otherwise
 	 */
 	Boolean deleteProject(Long idProject);
-	
+
 	/**
 	 * Get all the tasks associated to the project identified by <code>idProject</code>.
 	 * 

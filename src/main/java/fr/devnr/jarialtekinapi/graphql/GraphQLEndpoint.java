@@ -13,6 +13,7 @@ import fr.devnr.jarialtekinapi.service.TaskService;
 import graphql.schema.GraphQLSchema;
 import graphql.servlet.SimpleGraphQLServlet;
 
+
 @WebServlet(urlPatterns = "/api")
 public class GraphQLEndpoint extends SimpleGraphQLServlet {
 
@@ -24,13 +25,12 @@ public class GraphQLEndpoint extends SimpleGraphQLServlet {
 		projectService = new ProjectService("DEFAULT");
 	}
 
-	//  Constructors
-	// ==============
-	
+
 	public GraphQLEndpoint() {
 		super(buildSchema());
 	}
-	
+
+
 	/**
 	 * Creates and return the GraphQL schema defined in 'schema.graphqls'.
 	 * 

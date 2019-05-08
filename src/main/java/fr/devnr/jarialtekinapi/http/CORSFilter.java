@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+
 @WebFilter(asyncSupported = true, urlPatterns = { "/*" })
 public class CORSFilter implements Filter {
 
@@ -17,6 +18,7 @@ public class CORSFilter implements Filter {
 
 
     public CORSFilter() {}
+
 
     public void init(FilterConfig config) throws ServletException {}
 

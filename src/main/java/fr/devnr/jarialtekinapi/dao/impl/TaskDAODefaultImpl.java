@@ -15,30 +15,29 @@ import fr.devnr.jarialtekinapi.model.Priority;
 import fr.devnr.jarialtekinapi.model.Status;
 import fr.devnr.jarialtekinapi.model.Task;
 
+
 public class TaskDAODefaultImpl implements TaskDAO {
-	
+
 	private final DataSource source;
-	
+
+
 	public TaskDAODefaultImpl(DataSource ds) {
 		this.source = ds;
 	}
-	
-	
-	/**
-	 * Get all tasks in database (i.e. the whole content of the Tasks table).
-	 */
-	// Query
-	private static final String REQ_GetAllTasks = "SELECT * FROM Tasks";
-	// Method
+
+
+	private static final String QUERY_GetAllTasks = ""
+	+ "SELECT * FROM Tasks";
 	@Override
 	public List<Task> getAllTasks() {
 		
 		List<Task> tasks = new ArrayList<>();
 		
 		try (
-		Connection c = source.getConnection();
-		Statement stmt = c.createStatement();
-		ResultSet rs = stmt.executeQuery(REQ_GetAllTasks)) {
+		  Connection c = source.getConnection();
+		  Statement stmt = c.createStatement();
+		  ResultSet rs = stmt.executeQuery(QUERY_GetAllTasks)
+		) {
 			
 			while (rs.next()) {
 				tasks.add(extractTask(rs));
@@ -50,21 +49,19 @@ public class TaskDAODefaultImpl implements TaskDAO {
 		
 		return tasks;
 	}
-	
-	/**
-	 * Get one task from the database based on its id.
-	 */
-	// Query
-	private static final String REQ_GetTaskById = "SELECT * FROM Tasks WHERE id=?";
-	// Method
+
+
+	private static final String QUERY_GetTaskById = ""
+	+ "SELECT * FROM Tasks WHERE id=?";
 	@Override
 	public Task getTaskById(Long idTask) {
 		
 		Task task = null;
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskById)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_GetTaskById)
+		) {
 			
 			stmt.setLong(1, idTask);
 			try(ResultSet rs = stmt.executeQuery();) {
@@ -80,23 +77,20 @@ public class TaskDAODefaultImpl implements TaskDAO {
 		return task;
 	}
 
-	/**
-	 * Get the parent task from database for the task identified by idTask.
-	 */
-	// Query
-	private static final String REQ_GetParentTask = ""
+
+	private static final String QUERY_GetParentTask = ""
 	+ "SELECT id, name, description, priority, status "
 	+ "   FROM Tasks t JOIN ParentTasks p ON t.id=p.idParent "
 	+ "   WHERE p.idTask=?";
-	// Method
 	@Override
 	public Task getParentTask(Long idTask) {
 		
 		Task task = null;
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetParentTask)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_GetParentTask)
+		) {
 			
 			stmt.setLong(1, idTask);
 			try(ResultSet rs = stmt.executeQuery();) {
@@ -112,23 +106,20 @@ public class TaskDAODefaultImpl implements TaskDAO {
 		return task;
 	}
 
-	/**
-	 * Get the list of the sub-tasks for the task identified by idTask.
-	 */
-	// Query
-	private static final String REQ_GetSubTasks = ""
+
+	private static final String QUERY_GetSubTasks = ""
 	+ "SELECT id, name, description, priority, status "
 	+ "   FROM Tasks t JOIN ParentTasks p ON t.id=p.idTask "
 	+ "   WHERE p.idParent=?";
-	// Method
 	@Override
 	public List<Task> getSubTasks(Long idTask) {
 		
 		List<Task> tasks = new ArrayList<>();
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetSubTasks)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_GetSubTasks)
+		) {
 			
 			stmt.setLong(1, idTask);
 			try(ResultSet rs = stmt.executeQuery();) {
@@ -144,23 +135,20 @@ public class TaskDAODefaultImpl implements TaskDAO {
 		return tasks;
 	}
 
-	/**
-	 * Get the list of dependencies for the task identified by idTask.
-	 */
-	// Query
-	private static final String REQ_GetTaskDependencies = ""
+
+	private static final String QUERY_GetTaskDependencies = ""
 	+ "SELECT id, name, description, priority, status "
 	+ "   FROM Tasks t JOIN TasksDependencies d ON d.idDependency=t.id "
 	+ "   WHERE d.idTask=?";
-	// Method
 	@Override
 	public List<Task> getTaskDependencies(Long idTask) {
 		
 		List<Task> tasks = new ArrayList<>();
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_GetTaskDependencies)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_GetTaskDependencies)
+		) {
 			
 			stmt.setLong(1, idTask);
 			try(ResultSet rs = stmt.executeQuery()) {
@@ -176,19 +164,16 @@ public class TaskDAODefaultImpl implements TaskDAO {
 		return tasks;
 	}
 
-	/**
-	 * Create a new task in database (i.e. insert a row in the Tasks table).
-	 */
-	// Query
-	private static final String REQ_CreateTask = ""
+
+	private static final String QUERY_CreateTask = ""
 	+ "INSERT INTO Tasks (id, name, description, priority, status) VALUES (NULL, ?, ?, ?, ?)";
-	// Method
 	@Override
 	public Task createTask(Task task) {
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_CreateTask, Statement.RETURN_GENERATED_KEYS)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_CreateTask, Statement.RETURN_GENERATED_KEYS)
+		) {
 			
 			stmt.setString(1, task.getName());
 			stmt.setString(2, task.getDescription());
@@ -210,21 +195,18 @@ public class TaskDAODefaultImpl implements TaskDAO {
 		return task;
 	}
 
-	/**
-	 * Update a task in database in database according to the given task.
-	 */
-	// Query
-	private static final String REQ_UpdateTask = ""
+
+	private static final String QUERY_UpdateTask = ""
 	+ "UPDATE Tasks SET name=?, description=?, priority=?, status=? WHERE id=?";
-	// Method
 	@Override
 	public Boolean updateTask(Task task) {
 		
 		Boolean success = false;
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_UpdateTask)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_UpdateTask)
+		) {
 			
 			stmt.setString(1, task.getName());
 			stmt.setString(2, task.getDescription());
@@ -241,20 +223,18 @@ public class TaskDAODefaultImpl implements TaskDAO {
 		return success;
 	}
 
-	/**
-	 * Delete the task identified by idTask in database.
-	 */
-	// Query
-	private static final String REQ_DeleteTask = "DELETE FROM Tasks WHERE id=?";
-	// Method
+
+	private static final String QUERY_DeleteTask = ""
+	+ "DELETE FROM Tasks WHERE id=?";
 	@Override
 	public Boolean deleteTask(Long idTask) {
 		
 		Boolean success = false;
 		
 		try(
-		Connection c = source.getConnection();
-		PreparedStatement stmt = c.prepareStatement(REQ_DeleteTask)) {
+		  Connection c = source.getConnection();
+		  PreparedStatement stmt = c.prepareStatement(QUERY_DeleteTask)
+		) {
 			
 			stmt.setLong(1, idTask);
 			
@@ -268,10 +248,7 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	}
 	
 	
-	// =================
-	//  Private Methods
-	// =================
-	
+
 	/**
 	 * Extract a task from the given result set.
 	 * 
@@ -288,5 +265,5 @@ public class TaskDAODefaultImpl implements TaskDAO {
 			Status.valueOf(rs.getInt("status"))
 		);
 	}
-	
+
 }

@@ -1,9 +1,11 @@
 package fr.devnr.jarialtekinapi.dto;
 
+
 public class PriorityDTO {
 
     private Integer index;
     private String label;
+
 
     public PriorityDTO() {}
 
