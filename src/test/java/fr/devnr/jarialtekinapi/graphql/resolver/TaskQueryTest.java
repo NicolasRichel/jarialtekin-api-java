@@ -1,30 +1,34 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
-import fr.devnr.jarialtekinapi.dto.PeriodDTO;
-import fr.devnr.jarialtekinapi.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.PeriodDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.service.TaskService;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskQueryTest {
+
+class TaskQueryTest {
 
     private TaskService taskService = mock(TaskService.class);
+
 
     @Test
     void GetAllTasks() {
         // --{ ARRANGE }--
-        List<TaskDTO> tasks = Arrays.asList(
-            new TaskDTO(1L, "T1", "La tâche 1."),
-            new TaskDTO(2L, "T2", "Description."),
-            new TaskDTO(3L, "T3", "")
+        List<Task> tasks = Arrays.asList(
+            new Task(1L, "T1"),
+            new Task(2L, "T2"),
+            new Task(3L, "T3")
         );
-        when(taskService.getAllTasksDTO()).thenReturn(tasks);
-        Query query = new Query(taskService, null);
+        when(taskService.getAllTasks()).thenReturn(tasks);
+        Query query = new Query(null, null, null, taskService);
 
         // --{ ACT }--
         List<TaskDTO> result = query.allTasks();
@@ -33,22 +37,21 @@ public class TaskQueryTest {
         assertEquals(3, result.size());
         TaskDTO task = result.get(0);
         assertAll(
-            () -> assertEquals(Long.valueOf(1), task.getId()),
-            () -> assertEquals("T1", task.getName()),
-            () -> assertEquals("La tâche 1.", task.getDescription())
+            () -> assertEquals(Long.valueOf(1), task.id),
+            () -> assertEquals("T1", task.name)
         );
-        verify(taskService, times(1)).getAllTasksDTO();
+        verify(taskService, times(1)).getAllTasks();
     }
 
     @Test
     void GetAllTasksInPeriod() {
         // --{ ARRANGE }--
-        List<TaskDTO> tasks = Arrays.asList(
-            new TaskDTO(1L, "X", "abcd"),
-            new TaskDTO(2L, "Y", "1234")
+        List<Task> tasks = Arrays.asList(
+            new Task(1L, "X"),
+            new Task(2L, "Y")
         );
-        when(taskService.getTasksByPeriodDTO(any())).thenReturn(tasks);
-        Query query = new Query(taskService, null);
+        when(taskService.getTasksByPeriod(any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(tasks);
+        Query query = new Query(null, null, null, taskService);
 
         // --{ ACT }--
         PeriodDTO period = new PeriodDTO("2018-06-21T10:00", "2018-07-18T12:00");
@@ -58,30 +61,28 @@ public class TaskQueryTest {
         assertEquals(2, result.size());
         TaskDTO task = result.get(0);
         assertAll(
-            () -> assertEquals(Long.valueOf(1), task.getId()),
-            () -> assertEquals("X", task.getName()),
-            () -> assertEquals("abcd", task.getDescription())
+            () -> assertEquals(Long.valueOf(1), task.id),
+            () -> assertEquals("X", task.name)
         );
-        verify(taskService, times(1)).getTasksByPeriodDTO(any());
+        verify(taskService, times(1)).getTasksByPeriod(any(LocalDateTime.class), any(LocalDateTime.class));
     }
 
     @Test
     void GetTask() {
         // --{ ARRANGE }--
-        TaskDTO task = new TaskDTO(1L, "T1", "Description");
-        when(taskService.getTaskDTO(eq(1L))).thenReturn(task);
-        Query query = new Query(taskService, null);
+        Task task = new Task(1L, "T1");
+        when(taskService.getTask(eq(1L))).thenReturn(task);
+        Query query = new Query(null, null, null, taskService);
 
         // --{ ACT }--
         TaskDTO result = query.task(1L);
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(1), result.getId()),
-            () -> assertEquals("T1", result.getName()),
-            () -> assertEquals("Description", result.getDescription())
+            () -> assertEquals(Long.valueOf(1), result.id),
+            () -> assertEquals("T1", result.name)
         );
-        verify(taskService, times(1)).getTaskDTO(eq(1L));
+        verify(taskService, times(1)).getTask(eq(1L));
     }
 
 }

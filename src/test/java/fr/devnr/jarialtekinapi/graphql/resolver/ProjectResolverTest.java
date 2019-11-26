@@ -1,14 +1,18 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
-import fr.devnr.jarialtekinapi.dto.PeriodDTO;
-import fr.devnr.jarialtekinapi.dto.ProjectDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.PeriodDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.ProjectDTO;
+import fr.devnr.jarialtekinapi.model.Project;
 import fr.devnr.jarialtekinapi.service.ProjectService;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProjectResolverTest {
+
+class ProjectResolverTest {
 
     private ProjectService projectService = mock(ProjectService.class);
 
@@ -16,8 +20,10 @@ public class ProjectResolverTest {
     @Test
     void GetDates() {
         // --{ ARRANGE }--
-        PeriodDTO period = new PeriodDTO("2018-02-25T08:00:00", "2019-02-25T20:00:00");
-        when(projectService.getPeriodDTO(eq(1L))).thenReturn(period);
+        Project p = new Project(1L, "P1");
+        p.setStartDate( LocalDate.of(2019, 11, 1) );
+        p.setEndDate( LocalDate.of(2019, 11, 2) );
+        when(projectService.getProject(eq(1L))).thenReturn(p);
         ProjectResolver projectResolver = new ProjectResolver(projectService);
 
         // --{ ACT }--
@@ -26,10 +32,10 @@ public class ProjectResolverTest {
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals("2018-02-25T08:00:00", result.getStart()),
-            () -> assertEquals("2019-02-25T20:00:00", result.getEnd())
+            () -> assertEquals("2019-11-01", result.start),
+            () -> assertEquals("2019-11-02", result.end)
         );
-        verify(projectService, times(1)).getPeriodDTO(eq(1L));
+        verify(projectService, times(1)).getProject(eq(1L));
     }
 
 }

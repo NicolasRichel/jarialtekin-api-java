@@ -6,46 +6,27 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ConfigTest {
+
+class ConfigTest {
 
     @Test
     void GetProperty() {
-        // --{ ARRANGE / ACT / ASSERT }--
-        assertEquals( "testValue", Config.get("testProperty") );
+        Config config = Config.getConfig();
+        String prop1 = config.get("prop1");
+        assertEquals("Hello World !", prop1);
     }
 
     @Test
-    void GetPropertyFromFile() {
-        // --{ ARRANGE }--
-        String filename = "/testconfig.properties";
-
-        // --{ ACT }--
-        String prop1 = Config.get(filename, "prop1");
-        String prop2 = Config.get(filename, "prop2");
-        String prop3 = Config.get(filename, "prop3");
-
-        // --{ ASSERT }--
+    void GetProperties() {
+        Config config = Config.getConfig();
+        String[] propNames = { "prop1", "prop2.value", "prop3", "prop4", "prop5" };
+        Map<String, String> props = config.get( propNames );
         assertAll(
-            () -> assertEquals("Hello World !", prop1),
-            () -> assertEquals("0", prop2),
-            () -> assertEquals("1.0", prop3)
-        );
-    }
-
-    @Test
-    void GetListOfPropertiesFromFile() {
-        // --{ ARRANGE }--
-        String filename = "/testconfig.properties";
-        String[] properties = { "prop1", "prop4", "prop5" };
-
-        // --{ ACT }--
-        Map<String, String> propMap = Config.get(filename, properties);
-
-        // --{ ASSERT }--
-        assertAll(
-            () -> assertEquals("Hello World !", propMap.get("prop1")),
-            () -> assertEquals("\"abcd\"", propMap.get("prop4")),
-            () -> assertEquals("{a:1,b:2,c:3}", propMap.get("prop5"))
+            () -> assertEquals("Hello World !", props.get("prop1")),
+            () -> assertEquals("0",             props.get("prop2.value")),
+            () -> assertEquals("1.0",           props.get("prop3")),
+            () -> assertEquals("\"abcd\"",      props.get("prop4")),
+            () -> assertEquals("{a:1,b:2,c:3}", props.get("prop5"))
         );
     }
 

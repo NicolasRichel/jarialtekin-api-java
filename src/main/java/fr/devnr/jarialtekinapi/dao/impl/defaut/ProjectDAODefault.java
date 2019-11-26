@@ -1,4 +1,4 @@
-package fr.devnr.jarialtekinapi.dao.impl;
+package fr.devnr.jarialtekinapi.dao.impl.defaut;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -18,12 +18,12 @@ import fr.devnr.jarialtekinapi.model.Status;
 import fr.devnr.jarialtekinapi.model.Task;
 
 
-public class ProjectDAODefaultImpl implements ProjectDAO {
+public class ProjectDAODefault implements ProjectDAO {
 
 	private final DataSource source;
 
 
-	public ProjectDAODefaultImpl(DataSource ds) {
+	public ProjectDAODefault(DataSource ds) {
 		this.source = ds;
 	}
 
@@ -32,23 +32,18 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	+ "SELECT * FROM Projects";
 	@Override
 	public List<Project> getAllProjects() {
-		
 		List<Project> projects = new ArrayList<>();
-		
 		try (
 		  Connection c = source.getConnection();
 		  Statement stmt = c.createStatement();
 		  ResultSet rs = stmt.executeQuery(QUERY_GetAllProjects)
 		) {
-			
 			while (rs.next()) {
 				projects.add(extractProject(rs));
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return projects;
 	}
 
@@ -57,25 +52,20 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	+ "SELECT * FROM Projects WHERE id=?";
 	@Override
 	public Project getProjectById(Long idProject) {
-		
 		Project project = null;
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_GetProjectById)
 		) {
-			
 			stmt.setLong(1, idProject);
 			try(ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
 					project = extractProject(rs);
 				}
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return project;
 	}
 
@@ -87,25 +77,20 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
     + "   WHERE t.idTask=?";
 	@Override
 	public Project getProjectByTask(Long idTask) {
-
 	    Project project = null;
-
 	    try(
           Connection c = source.getConnection();
           PreparedStatement stmt = c.prepareStatement(QUERY_GetProjectByTask)
 		) {
-
 	        stmt.setLong(1, idTask);
 	        try(ResultSet rs = stmt.executeQuery()) {
 	            if(rs.next()) {
 	                project = extractProject(rs);
                 }
             }
-
         } catch (SQLException e) {
 	        e.printStackTrace();
         }
-
 	    return project;
     }
 
@@ -114,31 +99,25 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
     + "INSERT INTO Projects (id, name, description, startDate, endDate) VALUES (NULL, ?, ?, ?, ?)";
 	@Override
 	public Project createProject(Project project) {
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_CreateProject, Statement.RETURN_GENERATED_KEYS)
 		) {
-			
 			stmt.setString(1, project.getName());
 			stmt.setString(2, project.getDescription());
 			stmt.setDate(3, Date.valueOf(project.getStartDate()));
 			stmt.setDate(4, Date.valueOf(project.getEndDate()));
-			
 			if (stmt.executeUpdate()!=1) {
 				throw new SQLException("Error while inserting new project.");
 			}
-			
 			try(ResultSet rs = stmt.getGeneratedKeys()) {
 				if (rs.next()) {
 					project.setId(rs.getLong(1));
 				}
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return project;
 	}
 
@@ -147,14 +126,11 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
     + "UPDATE Projects SET name=?, description=?, startDate=?, endDate=? WHERE id=?";
 	@Override
 	public Boolean updateProject(Project project) {
-		
 		Boolean success = false;
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_UpdateProject)
 		) {
-			
 			stmt.setString(1, project.getName());
 			stmt.setString(2, project.getDescription());
 			stmt.setDate(3, Date.valueOf(project.getStartDate()));
@@ -166,7 +142,6 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return success;
 	}
 
@@ -175,9 +150,7 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 	+ "DELETE FROM Projects WHERE id=?";
 	@Override
 	public Boolean deleteProject(Long idProject) {
-		
 		Boolean success = false;
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_DeleteProject)
@@ -190,7 +163,6 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return success;
 	}
 
@@ -201,25 +173,20 @@ public class ProjectDAODefaultImpl implements ProjectDAO {
     + "   WHERE p.idProject=?";
 	@Override
 	public List<Task> getProjectTasks(Long idProject) {
-		
 		List<Task> tasks = new ArrayList<>();
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_GetProjectTasks)
 		) {
-			
 			stmt.setLong(1, idProject);
 			try(ResultSet rs = stmt.executeQuery();) {
 				while (rs.next()) {
 					tasks.add(extractTask(rs));
 				}
 			}
-			
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return tasks;
 	}
 

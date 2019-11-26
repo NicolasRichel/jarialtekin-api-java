@@ -1,7 +1,9 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
-import fr.devnr.jarialtekinapi.dto.ProjectDTO;
-import fr.devnr.jarialtekinapi.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.ProjectDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.model.Project;
+import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.service.ProjectService;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +13,8 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProjectQueryTest {
+
+class ProjectQueryTest {
 
     private ProjectService projectService = mock(ProjectService.class);
 
@@ -19,13 +22,13 @@ public class ProjectQueryTest {
     @Test
     void GetAllProjects() {
         // --{ ARRANGE }--
-        List<ProjectDTO> projects = Arrays.asList(
-            new ProjectDTO(1L, "P1", "Description"),
-            new ProjectDTO(2L, "P2", ""),
-            new ProjectDTO(3L, "P3", "")
+        List<Project> projects = Arrays.asList(
+            new Project(1L, "P1"),
+            new Project(2L, "P2"),
+            new Project(3L, "P3")
         );
-        when(projectService.getAllProjectsDTO()).thenReturn(projects);
-        Query query = new Query(null, projectService);
+        when(projectService.getAllProjects()).thenReturn(projects);
+        Query query = new Query(null, projectService, null, null);
 
         // --{ ACT }--
         List<ProjectDTO> result = query.allProjects();
@@ -34,61 +37,58 @@ public class ProjectQueryTest {
         assertEquals(3, result.size());
         ProjectDTO project = result.get(0);
         assertAll(
-            () -> assertEquals(Long.valueOf(1), project.getId()),
-            () -> assertEquals("P1", project.getName()),
-            () -> assertEquals("Description", project.getDescription())
+            () -> assertEquals(Long.valueOf(1), project.id),
+            () -> assertEquals("P1", project.name)
         );
-        verify(projectService, times(1)).getAllProjectsDTO();
+        verify(projectService, times(1)).getAllProjects();
     }
 
     @Test
     void GetProject() {
         // --{ ARRANGE }--
-        ProjectDTO task = new ProjectDTO(1L, "P1", "Description");
-        when(projectService.getProjectDTO(eq(1L))).thenReturn(task);
-        Query query = new Query(null, projectService);
+        Project project = new Project(1L, "P1");
+        when(projectService.getProject(eq(1L))).thenReturn(project);
+        Query query = new Query(null, projectService, null, null);
 
         // --{ ACT }--
         ProjectDTO result = query.project(1L);
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(1), result.getId()),
-            () -> assertEquals("P1", result.getName()),
-            () -> assertEquals("Description", result.getDescription())
+            () -> assertEquals(Long.valueOf(1), result.id),
+            () -> assertEquals("P1", result.name)
         );
-        verify(projectService, times(1)).getProjectDTO(eq(1L));
+        verify(projectService, times(1)).getProject(eq(1L));
     }
 
     @Test
     void GetTaskProject() {
         // --{ ARRANGE }--
-        ProjectDTO project = new ProjectDTO(1L, "P1", "Description");
-        when(projectService.getProjectByTaskDTO(eq(5L))).thenReturn(project);
-        Query query = new Query(null, projectService);
+        Project project = new Project(1L, "P1");
+        when(projectService.getProjectByTask(eq(5L))).thenReturn(project);
+        Query query = new Query(null, projectService, null, null);
 
         // --{ ACT }--
         ProjectDTO result = query.taskProject(5L);
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(1), result.getId()),
-            () -> assertEquals("P1", result.getName()),
-            () -> assertEquals("Description", result.getDescription())
+            () -> assertEquals(Long.valueOf(1), result.id),
+            () -> assertEquals("P1", result.name)
         );
-        verify(projectService, times(1)).getProjectByTaskDTO(eq(5L));
+        verify(projectService, times(1)).getProjectByTask(eq(5L));
     }
 
     @Test
     void GetProjectTasksDTO() {
         // --{ ARRANGE }--
-        List<TaskDTO> tasks = Arrays.asList(
-            new TaskDTO(1L, "T1", "Description"),
-            new TaskDTO(2L, "T2", ""),
-            new TaskDTO(3L, "T3", "")
+        List<Task> tasks = Arrays.asList(
+            new Task(1L, "T1"),
+            new Task(2L, "T2"),
+            new Task(3L, "T3")
         );
-        when(projectService.getProjectTasksDTO(eq(1L))).thenReturn(tasks);
-        Query query = new Query(null, projectService);
+        when(projectService.getProjectTasks(eq(1L))).thenReturn(tasks);
+        Query query = new Query(null, projectService, null, null);
 
         // --{ ACT }--
         List<TaskDTO> result = query.projectTasks(1L);
@@ -97,11 +97,10 @@ public class ProjectQueryTest {
         assertEquals(3, result.size());
         TaskDTO task = result.get(0);
         assertAll(
-            () -> assertEquals(Long.valueOf(1), task.getId()),
-            () -> assertEquals("T1", task.getName()),
-            () -> assertEquals("Description", task.getDescription())
+            () -> assertEquals(Long.valueOf(1), task.id),
+            () -> assertEquals("T1", task.name)
         );
-        verify(projectService, times(1)).getProjectTasksDTO(eq(1L));
+        verify(projectService, times(1)).getProjectTasks(eq(1L));
     }
 
 }

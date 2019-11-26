@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
-public class TaskPlanning {
+public class TaskPlanning implements Model {
 
 	private Task task;
 	private LocalDateTime start;

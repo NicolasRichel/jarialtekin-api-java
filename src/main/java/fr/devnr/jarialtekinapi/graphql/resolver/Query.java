@@ -1,69 +1,93 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import fr.devnr.jarialtekinapi.dto.*;
-import fr.devnr.jarialtekinapi.model.Priority;
-import fr.devnr.jarialtekinapi.model.Status;
+import fr.devnr.jarialtekinapi.graphql.deserializer.PeriodDeserializer;
+import fr.devnr.jarialtekinapi.graphql.dto.*;
+import fr.devnr.jarialtekinapi.graphql.serializer.PrioritySerializer;
+import fr.devnr.jarialtekinapi.graphql.serializer.ProjectSerializer;
+import fr.devnr.jarialtekinapi.graphql.serializer.StatusSerializer;
+import fr.devnr.jarialtekinapi.graphql.serializer.TaskSerializer;
+import fr.devnr.jarialtekinapi.service.PriorityService;
 import fr.devnr.jarialtekinapi.service.ProjectService;
+import fr.devnr.jarialtekinapi.service.StatusService;
 import fr.devnr.jarialtekinapi.service.TaskService;
 
-import java.util.Arrays;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
 public class Query implements GraphQLQueryResolver {
 
-    private TaskService taskService;
+    private PriorityService priorityService;
     private ProjectService projectService;
+    private StatusService statusService;
+    private TaskService taskService;
 
 
-    public Query(TaskService taskService, ProjectService projectService) {
-        this.taskService = taskService;
+    public Query(
+        PriorityService priorityService,
+        ProjectService projectService,
+        StatusService statusService,
+        TaskService taskService
+    ) {
+        this.priorityService = priorityService;
         this.projectService = projectService;
+        this.statusService = statusService;
+        this.taskService = taskService;
     }
 
 
     public List<PriorityDTO> allPriorities() {
-        return Arrays.stream(Priority.values())
-            .map(p -> new PriorityDTO(p.getValue(), p.toString()))
-            .collect(Collectors.toList());
+        return priorityService.getPriorityList().stream()
+                .map(PrioritySerializer::serialize)
+                .collect(Collectors.toList());
     }
 
     public List<StatusDTO> allStatuses() {
-        return Arrays.stream(Status.values())
-            .map(s -> new StatusDTO(s.getValue(), s.toString()))
-            .collect(Collectors.toList());
+        return statusService.getStatusList().stream()
+                .map(StatusSerializer::serialize)
+                .collect(Collectors.toList());
     }
 
 
     public List<TaskDTO> allTasks() {
-        return taskService.getAllTasksDTO();
+        return taskService.getAllTasks().stream()
+                .map(TaskSerializer::serialize)
+                .collect(Collectors.toList());
     }
 
-    public List<TaskDTO> allTasksInPeriod(PeriodDTO period) {
-        return taskService.getTasksByPeriodDTO(period);
+    public List<TaskDTO> allTasksInPeriod(PeriodDTO dto) {
+        Map<String, LocalDateTime> period = PeriodDeserializer.deserialize(dto);
+        return taskService.getTasksByPeriod(period.get("start"), period.get("end")).stream()
+                .map(TaskSerializer::serialize)
+                .collect(Collectors.toList());
     }
 
     public TaskDTO task(Long idTask) {
-        return taskService.getTaskDTO(idTask);
+        return TaskSerializer.serialize( taskService.getTask(idTask) );
     }
 
 
     public List<ProjectDTO> allProjects() {
-        return projectService.getAllProjectsDTO();
+        return projectService.getAllProjects().stream()
+                .map(ProjectSerializer::serialize)
+                .collect(Collectors.toList());
     }
 
     public ProjectDTO project(Long idProject) {
-        return projectService.getProjectDTO(idProject);
+        return ProjectSerializer.serialize( projectService.getProject(idProject) );
     }
 
     public ProjectDTO taskProject(Long idTask) {
-        return projectService.getProjectByTaskDTO(idTask);
+        return ProjectSerializer.serialize( projectService.getProjectByTask(idTask) );
     }
 
     public List<TaskDTO> projectTasks(Long idProject) {
-        return projectService.getProjectTasksDTO(idProject);
+        return projectService.getProjectTasks(idProject).stream()
+                .map(TaskSerializer::serialize)
+                .collect(Collectors.toList());
     }
 
 }

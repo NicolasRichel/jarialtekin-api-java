@@ -1,13 +1,15 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
-import fr.devnr.jarialtekinapi.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.TaskDTO;
+import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.service.TaskService;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TaskMutationTest {
+
+class TaskMutationTest {
 
     private TaskService taskService = mock(TaskService.class);
 
@@ -15,8 +17,8 @@ public class TaskMutationTest {
     @Test
     void CreateTask() {
         // --{ ARRANGE }--
-        TaskDTO task = new TaskDTO(11L, "Task", "Description");
-        when(taskService.createTask(any(TaskDTO.class))).thenReturn(task);
+        Task task = new Task(11L, "Task");
+        when(taskService.createTask(any(Task.class))).thenReturn(task);
         Mutation mutation = new Mutation(taskService, null);
 
         // --{ ACT }--
@@ -25,17 +27,16 @@ public class TaskMutationTest {
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(11), result.getId()),
-            () -> assertEquals("Task", result.getName()),
-            () -> assertEquals("Description", result.getDescription())
+            () -> assertEquals(Long.valueOf(11), result.id),
+            () -> assertEquals("Task", result.name)
         );
-        verify(taskService, times(1)).createTask(any(TaskDTO.class));
+        verify(taskService, times(1)).createTask(any(Task.class));
     }
 
     @Test
     void UpdateTask() {
         // --{ ARRANGE }--
-        when(taskService.updateTask(any(TaskDTO.class))).thenReturn(Boolean.TRUE);
+        when(taskService.updateTask(any(Task.class))).thenReturn(Boolean.TRUE);
         Mutation mutation = new Mutation(taskService, null);
 
         // --{ ACT }--
@@ -44,7 +45,7 @@ public class TaskMutationTest {
 
         // --{ ASSERT }--
         assertTrue(result);
-        verify(taskService, times(1)).updateTask(any(TaskDTO.class));
+        verify(taskService, times(1)).updateTask(any(Task.class));
     }
 
     @Test

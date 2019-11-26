@@ -1,35 +1,35 @@
 package fr.devnr.jarialtekinapi.dao.factory;
 
+import javax.sql.DataSource;
+
+import fr.devnr.jarialtekinapi.dao.impl.defaut.DAOFactoryDefault;
 import fr.devnr.jarialtekinapi.dao.interfaces.ProjectDAO;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskDAO;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskPlanningDAO;
+import fr.devnr.jarialtekinapi.utils.Config;
 
 
 public abstract class DAOFactory {
-	
-	// Factories types
-	public static final String MARIADB = "MARIADB";
+
+    // DAO implementations
+    public static final String DEFAULT = "DEFAULT";
+    public static final String MARIADB = "MARIADB";
+    public static final String STANDARD = "STANDARD";
 
 
-	/**
-	 * Creates and return a DAOFactory according to the 'type' argument.
-	 * Return null if 'type' is null or is not a valid factory type.
-	 * 
-	 * @param type the type of DAOFactory to return
-	 * @return a DAOFactory of the given type
-	 */
-	public static DAOFactory getDAOFactory(String type) {
-		switch (type.toUpperCase()) {
-			case MARIADB:
-				return new DAOFactoryDefault();
-			default:
-				return null;
-		}
-	}
+    public static DAOFactory getDAOFactory() {
+        switch ( Config.getConfig().getDatabaseImpl() ) {
+            case DEFAULT:
+            case MARIADB:
+            case STANDARD:
+            default:
+                return new DAOFactoryDefault();
+        }
+    }
 
 
-	public abstract TaskDAO getTaskDAO();
-	public abstract TaskPlanningDAO getTaskPlanningDAO();
-	public abstract ProjectDAO getProjectDAO();
-	
+    public abstract ProjectDAO getProjectDAO(DataSource source);
+    public abstract TaskDAO getTaskDAO(DataSource source);
+    public abstract TaskPlanningDAO getTaskPlanningDAO(DataSource source);
+
 }

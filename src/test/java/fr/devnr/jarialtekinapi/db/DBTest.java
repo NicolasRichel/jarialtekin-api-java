@@ -4,7 +4,6 @@ import fr.devnr.jarialtekinapi.dao.factory.DataSourceFactory;
 import org.junit.jupiter.api.*;
 
 import javax.sql.DataSource;
-
 import java.sql.BatchUpdateException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -12,10 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+
 @Tag("db_tests")
 class DBTest {
 
-    private static final DataSource source = DataSourceFactory.getMariadbDataSource("/testdb.properties");
+    private static final DataSource source = DataSourceFactory.getDataSourceFactory().getDataSource();
 
     private static final String TEST_TASKS_PK = "src/test/resources/sql/test_Tasks_pk.sql";
     private static final String TEST_TASKS_NAMENOTNULL = "src/test/resources/sql/test_Tasks_nameNotNull.sql";

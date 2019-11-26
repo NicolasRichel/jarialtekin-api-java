@@ -1,11 +1,6 @@
 package fr.devnr.jarialtekinapi.dao;
 
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import fr.devnr.jarialtekinapi.dao.factory.DAOFactory;
-import fr.devnr.jarialtekinapi.dao.factory.DAOFactoryTest;
 import fr.devnr.jarialtekinapi.model.Priority;
 import fr.devnr.jarialtekinapi.model.Status;
 import fr.devnr.jarialtekinapi.dao.factory.DataSourceFactory;
@@ -16,13 +11,17 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 
 class TaskDAOTest {
 
-	private static final DataSource source = DataSourceFactory.getMariadbDataSource("/testdb.properties");
+	private static final DataSource source = DataSourceFactory.getDataSourceFactory().getDataSource();
 
-	private static final DAOFactory factory = new DAOFactoryTest();
+	private static final DAOFactory daoFactory = DAOFactory.getDAOFactory();
 	
 	private static final String SQL_TestData = "src/test/resources/sql/data_TaskDAOTest.sql";
 
@@ -47,7 +46,7 @@ class TaskDAOTest {
 	@Test
 	void GetAllTasks() {
 		// --{ ARRANGE }--
-		TaskDAO dao = factory.getTaskDAO();
+		TaskDAO dao = daoFactory.getTaskDAO(source);
 		
 		// --{ ACT }--
 		List<Task> tasks = dao.getAllTasks();
@@ -67,7 +66,7 @@ class TaskDAOTest {
 	@Test
 	void GetTaskById() {
 		// --{ ARRANGE }--
-		TaskDAO dao = factory.getTaskDAO();
+		TaskDAO dao = daoFactory.getTaskDAO(source);
 
 		// --{ ACT }--
 		Task task = dao.getTaskById(1L);
@@ -85,7 +84,7 @@ class TaskDAOTest {
 	@Test
 	void GetParentTask() {
 		// --{ ARRANGE }--
-		TaskDAO dao = factory.getTaskDAO();
+		TaskDAO dao = daoFactory.getTaskDAO(source);
 
 		// --{ ACT }--
 		Task task = dao.getParentTask(2L);
@@ -103,7 +102,7 @@ class TaskDAOTest {
 	@Test
 	void GetSubTasks() {
 		// --{ ARRANGE }--
-		TaskDAO dao = factory.getTaskDAO();
+		TaskDAO dao = daoFactory.getTaskDAO(source);
 
 		// --{ ACT }--
 		List<Task> tasks = dao.getSubTasks(1L);
@@ -123,7 +122,7 @@ class TaskDAOTest {
 	@Test
 	void GetTaskDependencies() {
 		// --{ ARRANGE }--
-		TaskDAO dao = factory.getTaskDAO();
+		TaskDAO dao = daoFactory.getTaskDAO(source);
 
 		// --{ ACT }--
 		List<Task> tasks = dao.getTaskDependencies(12L);
@@ -140,7 +139,7 @@ class TaskDAOTest {
 	@Test
 	void CreateTask() {
 		// --{ ARRANGE }--
-        TaskDAO dao = factory.getTaskDAO();
+        TaskDAO dao = daoFactory.getTaskDAO(source);
         Task task = new Task(null, "T21", "Description", Priority.NORMAL, Status.TODO);
 
         // --{ ACT }--
@@ -160,7 +159,7 @@ class TaskDAOTest {
 	@Test
 	void UpdateTask() {
 	    // --{ ARRANGE }--
-        TaskDAO dao = factory.getTaskDAO();
+        TaskDAO dao = daoFactory.getTaskDAO(source);
         Task task = new Task(1L, "Tâche 1", "La tâche numéro 1", Priority.HIGH, Status.DOING);
 
         // --{ ACT }--
@@ -181,7 +180,7 @@ class TaskDAOTest {
 	@Test
 	void DeleteTask() {
 	    // --{ ARRANGE }--
-        TaskDAO dao = factory.getTaskDAO();
+        TaskDAO dao = daoFactory.getTaskDAO(source);
 
         // --{ ACT }--
         Boolean isDeleted = dao.deleteTask(20L);

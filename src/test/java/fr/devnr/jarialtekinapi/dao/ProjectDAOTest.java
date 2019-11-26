@@ -1,7 +1,6 @@
 package fr.devnr.jarialtekinapi.dao;
 
 import fr.devnr.jarialtekinapi.dao.factory.DAOFactory;
-import fr.devnr.jarialtekinapi.dao.factory.DAOFactoryTest;
 import fr.devnr.jarialtekinapi.dao.factory.DataSourceFactory;
 import fr.devnr.jarialtekinapi.dao.interfaces.ProjectDAO;
 import fr.devnr.jarialtekinapi.db.DBTestsUtils;
@@ -17,11 +16,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class ProjectDAOTest {
 
-    private static final DataSource source = DataSourceFactory.getMariadbDataSource("/testdb.properties");
+    private static final DataSource source = DataSourceFactory.getDataSourceFactory().getDataSource();
 
-    private static final DAOFactory factory = new DAOFactoryTest();
+    private static final DAOFactory daoFactory = DAOFactory.getDAOFactory();
 
     private static final String SQL_TestData = "src/test/resources/sql/data_ProjectDAOTest.sql";
 
@@ -46,7 +46,7 @@ class ProjectDAOTest {
     @Test
     void GetAllProjects() {
         // --{ ARRANGE }--
-        ProjectDAO dao = factory.getProjectDAO();
+        ProjectDAO dao = daoFactory.getProjectDAO(source);
 
         // --{ ACT }--
         List<Project> projects = dao.getAllProjects();
@@ -66,7 +66,7 @@ class ProjectDAOTest {
     @Test
     void GetProjectById() {
         // --{ ARRANGE }--
-        ProjectDAO dao = factory.getProjectDAO();
+        ProjectDAO dao = daoFactory.getProjectDAO(source);
 
         // --{ ACT }--
         Project project = dao.getProjectById(1L);
@@ -84,7 +84,7 @@ class ProjectDAOTest {
     @Test
     void GetProjectByTask() {
         // --{ ARRANGE }--
-        ProjectDAO dao = factory.getProjectDAO();
+        ProjectDAO dao = daoFactory.getProjectDAO(source);
 
         // --{ ACT }--
         Project project = dao.getProjectByTask(1L);
@@ -102,7 +102,7 @@ class ProjectDAOTest {
     @Test
     void CreateProject() {
         // --{ ARRANGE }--
-        ProjectDAO dao = factory.getProjectDAO();
+        ProjectDAO dao = daoFactory.getProjectDAO(source);
         Project project = new Project(null, "P3", "Description du projet", LocalDate.now(), LocalDate.now().plusMonths(1));
 
         // --{ ACT }--
@@ -122,7 +122,7 @@ class ProjectDAOTest {
     @Test
     void UpdateProject() {
         // --{ ARRANGE }--
-        ProjectDAO dao = factory.getProjectDAO();
+        ProjectDAO dao = daoFactory.getProjectDAO(source);
         Project project = new Project(1L, "P1", "Description du projet", LocalDate.now(), LocalDate.now().plusMonths(1));
 
         // --{ ACT }--
@@ -142,7 +142,7 @@ class ProjectDAOTest {
     @Test
     void DeleteProject() {
         // --{ ARRANGE }--
-        ProjectDAO dao = factory.getProjectDAO();
+        ProjectDAO dao = daoFactory.getProjectDAO(source);
 
         // --{ ACT }--
         Boolean isDeleted = dao.deleteProject(2L);
@@ -158,7 +158,7 @@ class ProjectDAOTest {
     @Test
     void GetProjectTasks() {
         // --{ ARRANGE }--
-        ProjectDAO dao = factory.getProjectDAO();
+        ProjectDAO dao = daoFactory.getProjectDAO(source);
 
         // --{ ACT }--
         List<Task> tasks = dao.getProjectTasks(1L);

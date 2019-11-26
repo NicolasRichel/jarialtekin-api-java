@@ -1,7 +1,7 @@
 package fr.devnr.jarialtekinapi.model;
 
 
-public enum Status {
+public enum Status implements Model {
 
 	NONE(-1),
 	TODO(0),
@@ -20,7 +20,6 @@ public enum Status {
 
 	public static Status valueOf(int n) {
 		switch (n) {
-			case -1: return Status.NONE;
 			case 0: return Status.TODO;
 			case 1: return Status.DOING;
 			case 2: return Status.DONE;

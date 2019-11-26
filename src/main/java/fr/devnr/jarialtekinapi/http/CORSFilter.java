@@ -12,9 +12,9 @@ import java.io.IOException;
 @WebFilter(asyncSupported = true, urlPatterns = { "/*" })
 public class CORSFilter implements Filter {
 
-    private static final String ALLOWED_ORIGINS = Config.get("cors.allowedOrigins");
-    private static final String ALLOWED_METHODS = Config.get("cors.allowedMethods");
-    private static final String ALLOWED_HEADERS = Config.get("cors.allowedHeaders");
+    private static final String ALLOWED_ORIGINS = Config.getConfig().get("cors.allowedOrigins");
+    private static final String ALLOWED_METHODS = Config.getConfig().get("cors.allowedMethods");
+    private static final String ALLOWED_HEADERS = Config.getConfig().get("cors.allowedHeaders");
 
 
     public CORSFilter() {}

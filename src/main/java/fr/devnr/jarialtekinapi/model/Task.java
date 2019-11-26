@@ -3,12 +3,10 @@ package fr.devnr.jarialtekinapi.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 
-public class Task {
+public class Task extends IdentifiableModel {
 
-	private Long id;
 	private String name;
 	private String description;
 	private Priority priority;
@@ -38,8 +36,6 @@ public class Task {
 	}
 
 
-	public Long getId() { return id; }
-	public void setId(Long id) { this.id = id; }
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }
 	public String getDescription() { return description; }
@@ -62,20 +58,5 @@ public class Task {
 	public Boolean removeDependency(Task task) { return this.dependencies.remove(task); }
 	public Boolean addDependencies(Collection<Task> tasks) { return this.dependencies.addAll(tasks); }
 	public Boolean removeDependencies(Collection<Task> tasks) { return this.dependencies.removeAll(tasks); }
-
-
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Task task = (Task) o;
-		return Objects.equals(id, task.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return id != null ? id.hashCode() : 0;
-	}
 
 }

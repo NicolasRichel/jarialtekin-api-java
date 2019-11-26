@@ -11,15 +11,12 @@ schema {
 # Queries
 # =======
 type Query {
-
     allPriorities: [Priority]!
     allStatuses: [Status]!
-	
 	# Task queries :
 	allTasks: [Task]!
 	allTasksInPeriod(period: PeriodInput!): [Task]!
 	task(id: Int!): Task
-	
 	# Project queries :
 	allProjects: [Project]!
 	project(id: Int!): Project
@@ -31,12 +28,10 @@ type Query {
 # Mutations
 # =========
 type Mutation {
-	
 	# Task mutations :
 	createTask(task: TaskInput!): Task
 	updateTask(task: TaskInput!): Boolean
 	deleteTask(id: Int!): Boolean
-	
 	# Project mutations :
 	createProject(project: ProjectInput!): Project
 	updateProject(project: ProjectInput!): Boolean

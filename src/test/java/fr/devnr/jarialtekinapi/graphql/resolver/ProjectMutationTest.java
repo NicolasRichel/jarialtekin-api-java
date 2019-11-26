@@ -1,13 +1,15 @@
 package fr.devnr.jarialtekinapi.graphql.resolver;
 
-import fr.devnr.jarialtekinapi.dto.ProjectDTO;
+import fr.devnr.jarialtekinapi.graphql.dto.ProjectDTO;
+import fr.devnr.jarialtekinapi.model.Project;
 import fr.devnr.jarialtekinapi.service.ProjectService;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProjectMutationTest {
+
+class ProjectMutationTest {
 
     private ProjectService projectService = mock(ProjectService.class);
 
@@ -15,8 +17,8 @@ public class ProjectMutationTest {
     @Test
     void CreateProject() {
         // --{ ARRANGE }--
-        ProjectDTO task = new ProjectDTO(21L, "Project", "Description");
-        when(projectService.createProject(any(ProjectDTO.class))).thenReturn(task);
+        Project project = new Project(21L, "ProjectModel");
+        when(projectService.createProject(any(Project.class))).thenReturn(project);
         Mutation mutation = new Mutation(null, projectService);
 
         // --{ ACT }--
@@ -25,17 +27,16 @@ public class ProjectMutationTest {
 
         // --{ ASSERT }--
         assertAll(
-            () -> assertEquals(Long.valueOf(21), result.getId()),
-            () -> assertEquals("Project", result.getName()),
-            () -> assertEquals("Description", result.getDescription())
+            () -> assertEquals(Long.valueOf(21), result.id),
+            () -> assertEquals("ProjectModel", result.name)
         );
-        verify(projectService, times(1)).createProject(any(ProjectDTO.class));
+        verify(projectService, times(1)).createProject(any(Project.class));
     }
 
     @Test
     void UpdateProject() {
         // --{ ARRANGE }--
-        when(projectService.updateProject(any(ProjectDTO.class))).thenReturn(Boolean.TRUE);
+        when(projectService.updateProject(any(Project.class))).thenReturn(Boolean.TRUE);
         Mutation mutation = new Mutation(null, projectService);
 
         // --{ ACT }--
@@ -44,7 +45,7 @@ public class ProjectMutationTest {
 
         // --{ ASSERT }--
         assertTrue(result);
-        verify(projectService, times(1)).updateProject(any(ProjectDTO.class));
+        verify(projectService, times(1)).updateProject(any(Project.class));
     }
 
     @Test

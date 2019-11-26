@@ -1,27 +1,24 @@
 package fr.devnr.jarialtekinapi.service;
 
 import fr.devnr.jarialtekinapi.dao.interfaces.ProjectDAO;
-import fr.devnr.jarialtekinapi.dto.PeriodDTO;
-import fr.devnr.jarialtekinapi.dto.ProjectDTO;
-import fr.devnr.jarialtekinapi.dto.TaskDTO;
 import fr.devnr.jarialtekinapi.model.Project;
 import fr.devnr.jarialtekinapi.model.Task;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class ProjectServiceTest {
+
+class ProjectServiceTest {
 
     private ProjectDAO projectDAO = mock(ProjectDAO.class);
 
 
     @Test
-    void GetAllProjectsDTO() {
+    void GetAllProjects() {
         // --{ ARRANGE }--
         List<Project> projects = Arrays.asList(
             new Project(1L, "P1"),
@@ -32,11 +29,11 @@ public class ProjectServiceTest {
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        List<ProjectDTO> result = service.getAllProjectsDTO();
+        List<Project> result = service.getAllProjects();
 
         // --{ ASSERT }--
         assertEquals(3, result.size());
-        ProjectDTO project = result.get(0);
+        Project project = result.get(0);
         assertAll(
             () -> assertEquals(Long.valueOf(1), project.getId()),
             () -> assertEquals("P1", project.getName())
@@ -45,7 +42,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    void GetProjectDTO() {
+    void GetProject() {
         // --{ ARRANGE }--
         Project project = new Project(1L, "P1");
         project.setDescription("Description du projet.");
@@ -54,8 +51,8 @@ public class ProjectServiceTest {
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        ProjectDTO result1 = service.getProjectDTO(1L);
-        ProjectDTO result2 = service.getProjectDTO(2L);
+        Project result1 = service.getProject(1L);
+        Project result2 = service.getProject(2L);
 
         // --{ ASSERT }--
         assertAll(
@@ -69,16 +66,14 @@ public class ProjectServiceTest {
     }
 
     @Test
-    void GetProjectByTaskDTO() {
+    void GetProjectByTask() {
         // --{ ARRANGE }--
         Project project = new Project(100L, "P1");
         when(projectDAO.getProjectByTask(eq(1L))).thenReturn(project);
-        when(projectDAO.getProjectByTask(eq(2L))).thenReturn(null);
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        ProjectDTO result1 = service.getProjectByTaskDTO(1L);
-        ProjectDTO result2 = service.getProjectByTaskDTO(2L);
+        Project result1 = service.getProjectByTask(1L);
 
         // --{ ASSERT }--
         assertAll(
@@ -86,12 +81,10 @@ public class ProjectServiceTest {
             () -> assertEquals("P1", result1.getName())
         );
         verify(projectDAO, times(1)).getProjectByTask(eq(1L));
-        assertNull(result2);
-        verify(projectDAO, times(1)).getProjectByTask(eq(2L));
     }
 
     @Test
-    void GetProjectTasksDTO() {
+    void GetProjectTasks() {
         // --{ ARRANGE }--
         List<Task> tasks = Arrays.asList(
             new Task(1L, "T1"),
@@ -102,42 +95,16 @@ public class ProjectServiceTest {
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        List<TaskDTO> result = service.getProjectTasksDTO(1L);
+        List<Task> result = service.getProjectTasks(1L);
 
         // --{ ASSERT }--
         assertEquals(3, result.size());
-        TaskDTO task = result.get(0);
+        Task task = result.get(0);
         assertAll(
             () -> assertEquals(Long.valueOf(1), task.getId()),
             () -> assertEquals("T1", task.getName())
         );
         verify(projectDAO, times(1)).getProjectTasks(eq(1L));
-    }
-
-    @Test
-    void GetPeriodDTO() {
-        // --{ ARRANGE }--
-        Project project = new Project(
-            1L, "P1", "Description",
-            LocalDate.of(2018, 5, 5),
-            LocalDate.of(2018, 6, 6)
-        );
-        when(projectDAO.getProjectById(1L)).thenReturn(project);
-        when(projectDAO.getProjectById(eq(2L))).thenReturn(null);
-        ProjectService service = new ProjectService(projectDAO);
-
-        // --{ ACT }--
-        PeriodDTO result1 = service.getPeriodDTO(1L);
-        PeriodDTO result2 = service.getPeriodDTO(2L);
-
-        // -- { ASSERT }--
-        assertAll(
-            () -> assertEquals("2018-05-05", result1.getStart()),
-            () -> assertEquals("2018-06-06", result1.getEnd())
-        );
-        verify(projectDAO, times(1)).getProjectById(eq(1L));
-        assertNull(result2);
-        verify(projectDAO, times(1)).getProjectById(eq(2L));
     }
 
     @Test
@@ -149,8 +116,7 @@ public class ProjectServiceTest {
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        ProjectDTO input = new ProjectDTO(null, "Project", "Description");
-        ProjectDTO result = service.createProject(input);
+        Project result = service.createProject(project);
 
         // --{ ASSERT }--
         assertAll(
@@ -170,8 +136,7 @@ public class ProjectServiceTest {
         ProjectService service = new ProjectService(projectDAO);
 
         // --{ ACT }--
-        ProjectDTO input = new ProjectDTO(22L, "P22", "");
-        Boolean result = service.updateProject(input);
+        Boolean result = service.updateProject(project);
 
         // --{ ASSERT }--
         assertTrue(result);

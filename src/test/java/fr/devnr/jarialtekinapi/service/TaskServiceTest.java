@@ -2,8 +2,6 @@ package fr.devnr.jarialtekinapi.service;
 
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskDAO;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskPlanningDAO;
-import fr.devnr.jarialtekinapi.dto.PeriodDTO;
-import fr.devnr.jarialtekinapi.dto.TaskDTO;
 import fr.devnr.jarialtekinapi.model.Task;
 import fr.devnr.jarialtekinapi.model.TaskPlanning;
 import org.junit.jupiter.api.Test;
@@ -17,6 +15,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class TaskServiceTest {
 
     private TaskDAO taskDAO = mock(TaskDAO.class);
@@ -24,7 +23,7 @@ class TaskServiceTest {
 
 
     @Test
-    void GetAllTasksModel() {
+    void GetAllTasks() {
         // --{ ARRANGE }--
         List<Task> tasks = Arrays.asList(
             new Task(1L, "T1"), new Task(2L, "T2"), new Task(3L, "T3")
@@ -43,7 +42,7 @@ class TaskServiceTest {
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        List<Task> result = service.getAllTasksModel();
+        List<Task> result = service.getAllTasks();
 
         // --{ ASSERT }--
         assertEquals(3, result.size());
@@ -62,29 +61,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void GetAllTasksDTO() {
-        // --{ ARRANGE }--
-        List<Task> tasks = Arrays.asList(
-            new Task(1L, "T1"), new Task(2L, "T2"), new Task(3L, "T3")
-        );
-        when(taskDAO.getAllTasks()).thenReturn(tasks);
-        TaskService service = new TaskService(taskDAO, taskPlanningDAO);
-
-        // --{ ACT }--
-        List<TaskDTO> result = service.getAllTasksDTO();
-
-        // --{ ASSERT }--
-        assertEquals(3, result.size());
-        TaskDTO task = result.get(0);
-        assertAll("task",
-            () -> assertEquals(Long.valueOf(1), task.getId()),
-            () -> assertEquals("T1", task.getName())
-        );
-        verify(taskDAO, times(1)).getAllTasks();
-    }
-
-    @Test
-    void GetTasksByPeriodDTO() {
+    void GetTasksByPeriod() {
         // --{ ARRANGE }--
         LocalDateTime start = LocalDateTime.of(2018, 2, 3, 9, 0);
         LocalDateTime end = LocalDateTime.of(2018, 2, 5, 12, 30);
@@ -104,12 +81,11 @@ class TaskServiceTest {
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        PeriodDTO period = new PeriodDTO("2018-02-03T09:00", "2018-02-05T12:30");
-        List<TaskDTO> result = service.getTasksByPeriodDTO(period);
+        List<Task> result = service.getTasksByPeriod(start, end);
 
         // --{ ASSERT }--
         assertEquals(2, result.size());
-        TaskDTO task = result.get(0);
+        Task task = result.get(0);
         assertAll(
             () -> assertEquals(Long.valueOf(1), task.getId()),
             () -> assertEquals("T1", task.getName())
@@ -118,7 +94,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void GetTaskDTO() {
+    void GetTask() {
         // --{ ARRANGE }--
         Task task = new Task(1L, "T1");
         task.setDescription("Une tâche chiante");
@@ -127,8 +103,8 @@ class TaskServiceTest {
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        TaskDTO result1 = service.getTaskDTO(1L);
-        TaskDTO result2 = service.getTaskDTO(2L);
+        Task result1 = service.getTask(1L);
+        Task result2 = service.getTask(2L);
 
         // --{ ASSERT }--
         assertAll(
@@ -142,11 +118,10 @@ class TaskServiceTest {
     }
 
     @Test
-    void GetPeriodDTO() {
+    void GetTaskPlanning() {
         // --{ ARRANGE }--
-        Task task = new Task(1L, "T1");
         TaskPlanning planning = new TaskPlanning(
-            task,
+            new Task(1L, "T1"),
             LocalDateTime.of(
                 LocalDate.of(2000, 1, 1),
                 LocalTime.of(13, 0)
@@ -157,19 +132,17 @@ class TaskServiceTest {
             )
         );
         when(taskPlanningDAO.getTaskPlanningByTask(eq(1L))).thenReturn(planning);
-        when(taskPlanningDAO.getTaskPlanningByTask(eq(2L))).thenReturn(null);
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        PeriodDTO result1 = service.getPeriodDTO(1L);
-        PeriodDTO result2 = service.getPeriodDTO(2L);
+        TaskPlanning result = service.getTaskPlanning(1L);
 
         // --{ ASSERT }--
-        assertEquals("2000-01-01T13:00", result1.getStart());
-        assertEquals("2000-01-02T08:30", result1.getEnd());
+        assertEquals(LocalDate.of(2000, 1, 1), result.getStartDate());
+        assertEquals(LocalTime.of(13, 0), result.getStartTime());
+        assertEquals(LocalDate.of(2000, 1, 2), result.getEndDate());
+        assertEquals(LocalTime.of(8, 30), result.getEndTime());
         verify(taskPlanningDAO, times(1)).getTaskPlanningByTask(eq(1L));
-        assertNull(result2);
-        verify(taskPlanningDAO, times(1)).getTaskPlanningByTask(eq(2L));
 
     }
 
@@ -182,8 +155,7 @@ class TaskServiceTest {
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        TaskDTO input = new TaskDTO(null, "Task", "Description");
-        TaskDTO result = service.createTask(input);
+        Task result = service.createTask(task);
 
         // --{ ASSERT }--
         assertAll(
@@ -203,8 +175,7 @@ class TaskServiceTest {
         TaskService service = new TaskService(taskDAO, taskPlanningDAO);
 
         // --{ ACT }--
-        TaskDTO input = new TaskDTO(12L, "T12", "Description");
-        Boolean result = service.updateTask(input);
+        Boolean result = service.updateTask(task);
 
         // --{ ASSERT }--
         assertTrue(result);

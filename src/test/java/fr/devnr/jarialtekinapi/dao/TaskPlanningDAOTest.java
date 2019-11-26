@@ -1,7 +1,6 @@
 package fr.devnr.jarialtekinapi.dao;
 
 import fr.devnr.jarialtekinapi.dao.factory.DAOFactory;
-import fr.devnr.jarialtekinapi.dao.factory.DAOFactoryTest;
 import fr.devnr.jarialtekinapi.dao.factory.DataSourceFactory;
 import fr.devnr.jarialtekinapi.dao.interfaces.TaskPlanningDAO;
 import fr.devnr.jarialtekinapi.db.DBTestsUtils;
@@ -19,11 +18,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class TaskPlanningDAOTest {
 
-    private static final DataSource source = DataSourceFactory.getMariadbDataSource("/testdb.properties");
+    private static final DataSource source = DataSourceFactory.getDataSourceFactory().getDataSource();
 
-    private static final DAOFactory factory = new DAOFactoryTest();
+    private static final DAOFactory factory = DAOFactory.getDAOFactory();
 
     private static final String SQL_TestData = "src/test/resources/sql/data_TaskPlanningDAOTest.sql";
 
@@ -48,7 +48,7 @@ class TaskPlanningDAOTest {
     @Test
     void GetAllTaskPlannings() {
         // --{ ARRANGE }--
-        TaskPlanningDAO dao = factory.getTaskPlanningDAO();
+        TaskPlanningDAO dao = factory.getTaskPlanningDAO(source);
 
         // --{ ACT }--
         List<TaskPlanning> plannings = dao.getAllTaskPlannings();
@@ -69,7 +69,7 @@ class TaskPlanningDAOTest {
     @Test
     void GetTaskPlanningByTask() {
         // --{ ARRANGE }--
-        TaskPlanningDAO dao = factory.getTaskPlanningDAO();
+        TaskPlanningDAO dao = factory.getTaskPlanningDAO(source);
 
         // --{ ACT }--
         TaskPlanning planning = dao.getTaskPlanningByTask(2L);
@@ -88,7 +88,7 @@ class TaskPlanningDAOTest {
     @Test
     void GetTaskPlanningsByPeriod() {
         // --{ ARRANGE }--
-        TaskPlanningDAO dao = factory.getTaskPlanningDAO();
+        TaskPlanningDAO dao = factory.getTaskPlanningDAO(source);
         LocalDateTime start = LocalDateTime.of(
             LocalDate.of(2018, 1, 1),
             LocalTime.of(8, 0, 0)
@@ -116,7 +116,7 @@ class TaskPlanningDAOTest {
     @Test
     void CreateTaskPlanning() {
         // --{ ARRANGE }--
-        TaskPlanningDAO dao = factory.getTaskPlanningDAO();
+        TaskPlanningDAO dao = factory.getTaskPlanningDAO(source);
         LocalDateTime start = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(9, 30, 0));
         LocalDateTime end = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(11, 0, 0));
         TaskPlanning planning = new TaskPlanning(new Task(4L, "T4"), start, end);
@@ -138,7 +138,7 @@ class TaskPlanningDAOTest {
     @Test
     void UpdateTaskPlanning() {
         // --{ ARRANGE }--
-        TaskPlanningDAO dao = factory.getTaskPlanningDAO();
+        TaskPlanningDAO dao = factory.getTaskPlanningDAO(source);
         LocalDateTime start = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(9, 30, 0));
         LocalDateTime end = LocalDateTime.of(LocalDate.of(2018, 1, 3), LocalTime.of(11, 0, 0));
         TaskPlanning planning = new TaskPlanning(new Task(3L, "T3"), start, end);
@@ -159,7 +159,7 @@ class TaskPlanningDAOTest {
     @Test
     void DeleteTaskPlanning() {
         // --{ ARRANGE }--
-        TaskPlanningDAO dao = factory.getTaskPlanningDAO();
+        TaskPlanningDAO dao = factory.getTaskPlanningDAO(source);
 
         // --{ ACT }--
         Boolean isDeleted = dao.deleteTaskPlanning(3L);

@@ -1,4 +1,4 @@
-package fr.devnr.jarialtekinapi.dao.impl;
+package fr.devnr.jarialtekinapi.dao.impl.defaut;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,12 +16,12 @@ import fr.devnr.jarialtekinapi.model.Status;
 import fr.devnr.jarialtekinapi.model.Task;
 
 
-public class TaskDAODefaultImpl implements TaskDAO {
+public class TaskDAODefault implements TaskDAO {
 
 	private final DataSource source;
 
 
-	public TaskDAODefaultImpl(DataSource ds) {
+	public TaskDAODefault(DataSource ds) {
 		this.source = ds;
 	}
 
@@ -30,23 +30,18 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "SELECT * FROM Tasks";
 	@Override
 	public List<Task> getAllTasks() {
-		
 		List<Task> tasks = new ArrayList<>();
-		
 		try (
 		  Connection c = source.getConnection();
 		  Statement stmt = c.createStatement();
 		  ResultSet rs = stmt.executeQuery(QUERY_GetAllTasks)
 		) {
-			
 			while (rs.next()) {
-				tasks.add(extractTask(rs));
+				tasks.add(mapToTask(rs));
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return tasks;
 	}
 
@@ -55,25 +50,20 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "SELECT * FROM Tasks WHERE id=?";
 	@Override
 	public Task getTaskById(Long idTask) {
-		
 		Task task = null;
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_GetTaskById)
 		) {
-			
 			stmt.setLong(1, idTask);
-			try(ResultSet rs = stmt.executeQuery();) {
+			try(ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
-					task = extractTask(rs);
+					task = mapToTask(rs);
 				}
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return task;
 	}
 
@@ -84,25 +74,20 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "   WHERE p.idTask=?";
 	@Override
 	public Task getParentTask(Long idTask) {
-		
 		Task task = null;
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_GetParentTask)
 		) {
-			
 			stmt.setLong(1, idTask);
 			try(ResultSet rs = stmt.executeQuery();) {
 				if (rs.next()) {
-					task = extractTask(rs);
+					task = mapToTask(rs);
 				}
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return task;
 	}
 
@@ -113,25 +98,20 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "   WHERE p.idParent=?";
 	@Override
 	public List<Task> getSubTasks(Long idTask) {
-		
 		List<Task> tasks = new ArrayList<>();
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_GetSubTasks)
 		) {
-			
 			stmt.setLong(1, idTask);
 			try(ResultSet rs = stmt.executeQuery();) {
 				while (rs.next()) {
-					tasks.add(extractTask(rs));
+					tasks.add(mapToTask(rs));
 				}
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return tasks;
 	}
 
@@ -142,25 +122,20 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "   WHERE d.idTask=?";
 	@Override
 	public List<Task> getTaskDependencies(Long idTask) {
-		
 		List<Task> tasks = new ArrayList<>();
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_GetTaskDependencies)
 		) {
-			
 			stmt.setLong(1, idTask);
 			try(ResultSet rs = stmt.executeQuery()) {
 				while (rs.next()) {
-					tasks.add(extractTask(rs));
+					tasks.add(mapToTask(rs));
 				}
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return tasks;
 	}
 
@@ -169,19 +144,17 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "INSERT INTO Tasks (id, name, description, priority, status) VALUES (NULL, ?, ?, ?, ?)";
 	@Override
 	public Task createTask(Task task) {
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_CreateTask, Statement.RETURN_GENERATED_KEYS)
 		) {
-			
 			stmt.setString(1, task.getName());
 			stmt.setString(2, task.getDescription());
 			stmt.setInt(3, task.getPriority().getValue());
 			stmt.setInt(4, task.getStatus().getValue());
-			
-			if (stmt.executeUpdate()!=1) { throw new SQLException("Error while inserting new task."); }
-			
+			if (stmt.executeUpdate() != 1) {
+				throw new SQLException("Error while inserting new task.");
+			}
 			try(ResultSet rs = stmt.getGeneratedKeys()) {
 				if (rs.next()) {
 					task.setId(rs.getLong(1));
@@ -200,26 +173,22 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "UPDATE Tasks SET name=?, description=?, priority=?, status=? WHERE id=?";
 	@Override
 	public Boolean updateTask(Task task) {
-		
 		Boolean success = false;
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_UpdateTask)
 		) {
-			
 			stmt.setString(1, task.getName());
 			stmt.setString(2, task.getDescription());
 			stmt.setInt(3, task.getPriority().getValue());
 			stmt.setInt(4, task.getStatus().getValue());
 			stmt.setLong(5, task.getId());
 			
-			success = (stmt.executeUpdate()==1);
+			success = (stmt.executeUpdate() == 1);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return success;
 	}
 
@@ -228,22 +197,18 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	+ "DELETE FROM Tasks WHERE id=?";
 	@Override
 	public Boolean deleteTask(Long idTask) {
-		
 		Boolean success = false;
-		
 		try(
 		  Connection c = source.getConnection();
 		  PreparedStatement stmt = c.prepareStatement(QUERY_DeleteTask)
 		) {
-			
 			stmt.setLong(1, idTask);
 			
 			success = (stmt.executeUpdate()==1);
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return success;
 	}
 	
@@ -256,7 +221,7 @@ public class TaskDAODefaultImpl implements TaskDAO {
 	 * @return the extracted task
 	 * @throws SQLException
 	 */
-	private Task extractTask(ResultSet rs) throws SQLException {
+	private Task mapToTask(ResultSet rs) throws SQLException {
 		return new Task(
 			rs.getLong("id"),
 			rs.getString("name"),
