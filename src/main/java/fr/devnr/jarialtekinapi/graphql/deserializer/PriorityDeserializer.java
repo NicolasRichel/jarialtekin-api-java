@@ -8,7 +8,7 @@ public class PriorityDeserializer {
 
     public static Priority deserialize(PriorityDTO dto) {
         if (dto != null) {
-            return Priority.valueOf(dto.index);
+            return Priority.valueOf(dto.id);
         }
         return null;
     }

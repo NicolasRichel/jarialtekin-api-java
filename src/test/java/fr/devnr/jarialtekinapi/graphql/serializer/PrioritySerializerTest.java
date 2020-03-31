@@ -20,7 +20,7 @@ class PrioritySerializerTest {
         // --{ ACT }--
         PriorityDTO dto = PrioritySerializer.serialize( Priority.HIGH );
         // --{ ASSERT }--
-        assertEquals(Integer.valueOf(1), dto.index);
+        assertEquals(Integer.valueOf(1), dto.id);
         assertEquals("HIGH", dto.label);
     }
 

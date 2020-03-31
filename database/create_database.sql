@@ -9,7 +9,7 @@
 
 
 -- Database creation
--- -----------------
+-- ~~~~~~~~~~~~~~~~~
 
 DROP DATABASE IF EXISTS jarialtekin_db;
 CREATE DATABASE jarialtekin_db CHARACTER SET 'utf8';
@@ -17,24 +17,41 @@ USE jarialtekin_db;
 
 
 -- Tables creation
--- ---------------
+-- ~~~~~~~~~~~~~~~
+
+CREATE OR REPLACE TABLE Priorities (
+    id     INT AUTO_INCREMENT,
+    label  VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_priorities PRIMARY KEY (id)
+);
+INSERT INTO Priorities (id, label) VALUES (-1, 'LOW');
+INSERT INTO Priorities (id, label) VALUES (0, 'NORMAL');
+INSERT INTO Priorities (id, label) VALUES (1, 'HIGH');
+
+CREATE OR REPLACE TABLE Statuses (
+    id     INT AUTO_INCREMENT,
+    label  VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_statuses PRIMARY KEY (id)
+);
+INSERT INTO Statuses (id, label) VALUES (-1, 'NONE');
+INSERT INTO Statuses (id, label) VALUES (0, 'TODO');
+INSERT INTO Statuses (id, label) VALUES (1, 'DOING');
+INSERT INTO Statuses (id, label) VALUES (2, 'DONE');
 
 CREATE TABLE Tasks (
--- Attributs :
 	id           INT AUTO_INCREMENT,
 	name         VARCHAR(255) NOT NULL,
 	description  TEXT,
-	priority     INT,
-	status       INT,
--- Contraintes :
-	CONSTRAINT pk_tasks PRIMARY KEY (id)
+	priority     INT DEFAULT 0,
+	status       INT DEFAULT 0,
+	CONSTRAINT pk_tasks PRIMARY KEY (id),
+	CONSTRAINT fk_tasks_01 FOREIGN KEY (idPriority) REFERENCES Priorities(id),
+    CONSTRAINT fk_tasks_02 FOREIGN KEY (idStatus) REFERENCES Statuses(id)
 );
 
 CREATE TABLE ParentTasks (
--- Attributs :
 	idTask    INT NOT NULL,
 	idParent  INT NOT NULL,
--- Contraintes :
 	CONSTRAINT pk_parentTasks PRIMARY KEY (idTask),
 	CONSTRAINT fk_parentTasks_01 FOREIGN KEY (idTask) REFERENCES Tasks(id),
 	CONSTRAINT fk_parentTasks_02 FOREIGN KEY (idParent) REFERENCES Tasks(id)
@@ -42,10 +59,8 @@ CREATE TABLE ParentTasks (
 );
 
 CREATE TABLE TasksDependencies (
--- Attributs :
 	idTask        INT NOT NULL,
 	idDependency  INT NOT NULL,
--- Contraintes :
 	CONSTRAINT pk_tasksDependencies PRIMARY KEY (idTask, idDependency),
 	CONSTRAINT fk_tasksDependencies_01 FOREIGN KEY (idTask) REFERENCES Tasks(id),
 	CONSTRAINT fk_tasksDependencies_02 FOREIGN KEY (idDependency) REFERENCES Tasks(id)
@@ -53,35 +68,29 @@ CREATE TABLE TasksDependencies (
 );
 
 CREATE TABLE TasksPlannings (
--- Attributs :
 	idTask     INT NOT NULL,
 	startDate  DATE NOT NULL,
 	startTime  TIME NOT NULL,
 	endDate    DATE NOT NULL,
 	endTime    TIME NOT NULL,
--- Contraintes :
 	CONSTRAINT pk_tasksPlannings PRIMARY KEY (idTask),
 	CONSTRAINT fk_tasksPlannings_01 FOREIGN KEY (idTask) REFERENCES Tasks(id),
 	CONSTRAINT ck_tasksPlannings_01 CHECK (datediff(endDate, startDate)>0 or (datediff(endDate, startDate)=0 and time_to_sec(timediff(endTime, startTime))>=0))
 );
 
 CREATE TABLE Projects (
--- Attributs :
 	id           INT AUTO_INCREMENT,
 	name         VARCHAR(255) NOT NULL,
 	description  TEXT,
 	startDate    DATE,
 	endDate      DATE,
--- Contraintes :
 	CONSTRAINT pk_projects PRIMARY KEY (id),
 	CONSTRAINT ck_projects_01 CHECK (startDate is NULL or endDate is NULL or datediff(endDate, startDate)>=0)
 );
 
 CREATE TABLE ProjectsTasks (
--- Attributs :
 	idProject  INT NOT NULL,
 	idTask     INT NOT NULL,
--- Contraintes :
 	CONSTRAINT pk_projectsTasks PRIMARY KEY (idProject, idTask),
 	CONSTRAINT fk_projectsTasks_01 FOREIGN KEY (idProject) REFERENCES Projects(id),
 	CONSTRAINT fk_projectsTasks_02 FOREIGN KEY (idTask) REFERENCES Tasks(id)
@@ -89,7 +98,7 @@ CREATE TABLE ProjectsTasks (
 
 
 -- Views creation
--- --------------
+-- ~~~~~~~~~~~~~~
 
 CREATE VIEW TaskLevels (lvl, idNode) AS
 WITH RECURSIVE Tree AS (
@@ -135,23 +144,19 @@ SET standard_compliant_cte=1;
 
 
 -- Functions creation
--- ------------------
+-- ~~~~~~~~~~~~~~~~~~
 
 DELIMITER //
 CREATE FUNCTION isValidParent(task INT, parent INT)
 RETURNS TINYINT DETERMINISTIC
 BEGIN
 	SET standard_compliant_cte=0;
-	-- If the child task is not already higher in the task tree
 	IF NOT EXISTS (SELECT * FROM TaskTree WHERE idNode=parent AND idParent=task) THEN
-		-- And if the parent task does not depends on the child task
 		IF NOT EXISTS (SELECT * FROM DependencyGraph WHERE idNode=parent AND idDependency=task) THEN
-			-- Then its OK
 			SET standard_compliant_cte=1;
 			RETURN 1;
 		END IF;
 	END IF;
-	-- Otherwise there is a problem
 	SET standard_compliant_cte=1;
 	RETURN 0;
 END //
@@ -162,16 +167,12 @@ CREATE FUNCTION isValidDependency(task INT, dependency INT)
 RETURNS TINYINT DETERMINISTIC
 BEGIN
 	SET standard_compliant_cte=0;
-	-- If the task does not depends on a task that depends on it
 	IF NOT EXISTS (SELECT * FROM DependencyGraph WHERE idNode=dependency AND idDependency=task) THEN
-		-- And if the task does not depends on one of its child
 		IF NOT EXISTS (SELECT * FROM TasksTree WHERE idNode=dependency AND idParent=task) THEN
-			-- Then its OK
 			SET standard_compliant_cte=1;
 			RETURN 1;
 		END IF;
 	END IF;
-	-- Otherwise there is a problem
 	SET standard_compliant_cte=1;
 	RETURN 0;
 END //

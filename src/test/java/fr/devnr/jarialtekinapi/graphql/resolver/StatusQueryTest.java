@@ -29,22 +29,22 @@ class StatusQueryTest {
         assertAll(
             () -> {
                 StatusDTO s = statuses.get(0);
-                assertEquals(Integer.valueOf(-1), s.index);
+                assertEquals(Integer.valueOf(-1), s.id);
                 assertEquals("NONE", s.label);
             },
             () -> {
                 StatusDTO s = statuses.get(1);
-                assertEquals(Integer.valueOf(0), s.index);
+                assertEquals(Integer.valueOf(0), s.id);
                 assertEquals("TODO", s.label);
             },
             () -> {
                 StatusDTO s = statuses.get(2);
-                assertEquals(Integer.valueOf(1), s.index);
+                assertEquals(Integer.valueOf(1), s.id);
                 assertEquals("DOING", s.label);
             },
             () -> {
                 StatusDTO s = statuses.get(3);
-                assertEquals(Integer.valueOf(2), s.index);
+                assertEquals(Integer.valueOf(2), s.id);
                 assertEquals("DONE", s.label);
             }
         );

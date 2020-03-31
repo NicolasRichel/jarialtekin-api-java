@@ -29,17 +29,17 @@ class PriorityQueryTest {
         assertAll(
             () -> {
                 PriorityDTO p = priorities.get(0);
-                assertEquals(Integer.valueOf(-1), p.index);
+                assertEquals(Integer.valueOf(-1), p.id);
                 assertEquals("LOW", p.label);
             },
             () -> {
                 PriorityDTO p = priorities.get(1);
-                assertEquals(Integer.valueOf(0), p.index);
+                assertEquals(Integer.valueOf(0), p.id);
                 assertEquals("NORMAL", p.label);
             },
             () -> {
                 PriorityDTO p = priorities.get(2);
-                assertEquals(Integer.valueOf(1), p.index);
+                assertEquals(Integer.valueOf(1), p.id);
                 assertEquals("HIGH", p.label);
             }
         );

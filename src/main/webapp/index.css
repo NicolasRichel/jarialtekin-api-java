@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  padding: 24px;
+}
+
+h1 {
+  text-align: center;
+}
+
+ul > li {
+  margin: 12px 0;
+}

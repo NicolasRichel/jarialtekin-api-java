@@ -8,7 +8,7 @@ public class StatusDeserializer {
 
     public static Status deserialize(StatusDTO dto) {
         if (dto != null) {
-            return Status.valueOf(dto.index);
+            return Status.valueOf(dto.id);
         }
         return null;
     }

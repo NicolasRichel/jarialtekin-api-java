@@ -3,14 +3,14 @@ package fr.devnr.jarialtekinapi.graphql.dto;
 
 public class PriorityDTO implements DataTransferObject {
 
-    public Integer index;
+    public Integer id;
     public String label;
 
 
     public PriorityDTO() {}
 
-    public PriorityDTO(Integer index, String label) {
-        this.index = index;
+    public PriorityDTO(Integer id, String label) {
+        this.id = id;
         this.label = label;
     }
 

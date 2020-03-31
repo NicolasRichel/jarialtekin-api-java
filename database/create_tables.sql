@@ -4,12 +4,14 @@
 -- ================================
 --
 -- Ordre de création des tables :
---   (1) : Tasks
---   (2) : ParentTasks
---   (3) : TasksDependencies
---   (4) : TasksPlannings
---   (5) : Projects
---   (6) : ProjectsTasks
+--   (1) : Priorities
+--   (2) : Statuses
+--   (3) : Tasks
+--   (4) : ParentTasks
+--   (5) : TasksDependencies
+--   (6) : TasksPlannings
+--   (7) : Projects
+--   (8) : ProjectsTasks
 
 
 -- Suppression des tables (si elles existent) avant leur création.
@@ -20,6 +22,53 @@ DROP TABLE IF EXISTS TasksPlannings;
 DROP TABLE IF EXISTS TasksDependencies;
 DROP TABLE IF EXISTS ParentTasks;
 DROP TABLE IF EXISTS Tasks;
+DROP TABLE IF EXISTS Statuses;
+DROP TABLE IF EXISTS Priorities;
+
+
+-- { Création de la table Statuses }
+--
+-- Attributs :
+--   id (INT) : identifiant unique de la priorité
+--   label (VARCHAR) : label de la priorité
+--
+-- Contraintes :
+--   pk_priorities : (id) est la clé primaire de la table Priorities
+--
+CREATE OR REPLACE TABLE Priorities (
+
+    id     INT AUTO_INCREMENT,
+    label  VARCHAR(255) NOT NULL,
+
+    CONSTRAINT pk_priorities PRIMARY KEY (id)
+);
+-- Valeurs initiales :
+INSERT INTO Priorities (id, label) VALUES (-1, 'LOW');
+INSERT INTO Priorities (id, label) VALUES (0, 'NORMAL');
+INSERT INTO Priorities (id, label) VALUES (1, 'HIGH');
+
+
+-- { Création de la table Statuses }
+--
+-- Attributs :
+--   id (INT) : identifiant unique du statut
+--   label (VARCHAR) : label du statut
+--
+-- Contraintes :
+--   pk_statuses : (id) est la clé primaire de la table Statuses
+--
+CREATE OR REPLACE TABLE Statuses (
+
+    id     INT AUTO_INCREMENT,
+    label  VARCHAR(255) NOT NULL,
+
+    CONSTRAINT pk_statuses PRIMARY KEY (id)
+);
+-- Valeurs initiales :
+INSERT INTO Statuses (id, label) VALUES (-1, 'NONE');
+INSERT INTO Statuses (id, label) VALUES (0, 'TODO');
+INSERT INTO Statuses (id, label) VALUES (1, 'DOING');
+INSERT INTO Statuses (id, label) VALUES (2, 'DONE');
 
 
 -- { Création de la table Tasks }
@@ -28,21 +77,25 @@ DROP TABLE IF EXISTS Tasks;
 --   id (INT) : identifiant unique de la tâche
 --   name (VARCHAR) : nom de la tâche
 --   description (TEXT) : texte descriptif de la tâche
---   priority (INT) : niveau de priorité de la tâche
---   status (INT) : status de la tâche
+--   idPriority (INT) : identifiant de la priorité de la tâche
+--   idStatus (INT) : identifiant du statut de la tâche
 --
 -- Contraintes :
 --   pk_tasks : (id) est la clé primaire de la table Tasks
+--   fk_tasks_01 : (idPriority) fait référence à Priorities(id)
+--   fk_tasks_02 : (idStatus) fait référence à Statuses(id)
 --
 CREATE OR REPLACE TABLE Tasks (
--- Attributs :
+
 	id           INT AUTO_INCREMENT,
 	name         VARCHAR(255) NOT NULL,
 	description  TEXT,
-	priority     INT,
-	status       INT,
--- Contraintes :
-	CONSTRAINT pk_tasks PRIMARY KEY (id)
+	idPriority   INT DEFAULT 0,
+	idStatus     INT DEFAULT -1,
+
+	CONSTRAINT pk_tasks PRIMARY KEY (id),
+	CONSTRAINT fk_tasks_01 FOREIGN KEY (idPriority) REFERENCES Priorities(id),
+	CONSTRAINT fk_tasks_02 FOREIGN KEY (idStatus) REFERENCES Statuses(id)
 );
 
 
@@ -58,10 +111,10 @@ CREATE OR REPLACE TABLE Tasks (
 --   fk_parentTasks_02 : (idParent) fait référence à Tasks(id)
 --
 CREATE OR REPLACE TABLE ParentTasks (
--- Attributs :
+
 	idTask    INT NOT NULL,
 	idParent  INT NOT NULL,
--- Contraintes :
+
 	CONSTRAINT pk_parentTasks PRIMARY KEY (idTask),
 	CONSTRAINT fk_parentTasks_01 FOREIGN KEY (idTask) REFERENCES Tasks(id),
 	CONSTRAINT fk_parentTasks_02 FOREIGN KEY (idParent) REFERENCES Tasks(id)
@@ -81,10 +134,10 @@ CREATE OR REPLACE TABLE ParentTasks (
 --   fk_tasksDependencies_02 : (idDependency) fait référence à Tasks(id)
 --
 CREATE OR REPLACE TABLE TasksDependencies (
--- Attributs :
+
 	idTask        INT NOT NULL,
 	idDependency  INT NOT NULL,
--- Contraintes :
+
 	CONSTRAINT pk_tasksDependencies PRIMARY KEY (idTask, idDependency),
 	CONSTRAINT fk_tasksDependencies_01 FOREIGN KEY (idTask) REFERENCES Tasks(id),
 	CONSTRAINT fk_tasksDependencies_02 FOREIGN KEY (idDependency) REFERENCES Tasks(id)
@@ -105,13 +158,13 @@ CREATE OR REPLACE TABLE TasksDependencies (
 --   ck_tasksPlannings_01 : vérifie que la date/heure de fin est supérieure ou égale à date/heure de début
 --
 CREATE OR REPLACE TABLE TasksPlannings (
--- Attributs :
+
 	idTask     INT NOT NULL,
 	startDate  DATE NOT NULL,
 	startTime  TIME NOT NULL,
 	endDate    DATE NOT NULL,
 	endTime    TIME NOT NULL,
--- Contraintes :
+
 	CONSTRAINT pk_tasksPlannings PRIMARY KEY (idTask),
 	CONSTRAINT fk_tasksPlannings_01 FOREIGN KEY (idTask) REFERENCES Tasks(id),
 	CONSTRAINT ck_tasksPlannings_01 CHECK (datediff(endDate, startDate)>0 or (datediff(endDate, startDate)=0 and time_to_sec(timediff(endTime, startTime))>=0))
@@ -132,13 +185,13 @@ CREATE OR REPLACE TABLE TasksPlannings (
 --   ck_projects_01 : vérifie que (endDate) est supérieure ou égale à (startDate)
 --
 CREATE OR REPLACE TABLE Projects (
--- Attributs :
+
 	id           INT AUTO_INCREMENT,
 	name         VARCHAR(255) NOT NULL,
 	description  TEXT,
 	startDate    DATE,
 	endDate      DATE,
--- Contraintes :
+
 	CONSTRAINT pk_projects PRIMARY KEY (id),
 	CONSTRAINT ck_projects_01 CHECK (startDate is NULL or endDate is NULL or datediff(endDate, startDate)>=0)
 );
@@ -156,10 +209,10 @@ CREATE OR REPLACE TABLE Projects (
 --   fk_projectsTasks_02 : (idTask) fait référence à Tasks(id)
 --
 CREATE OR REPLACE TABLE ProjectsTasks (
--- Attributs :
+
 	idProject  INT NOT NULL,
 	idTask     INT NOT NULL,
--- Contraintes :
+
 	CONSTRAINT pk_projectsTasks PRIMARY KEY (idProject, idTask),
 	CONSTRAINT fk_projectsTasks_01 FOREIGN KEY (idProject) REFERENCES Projects(id),
 	CONSTRAINT fk_projectsTasks_02 FOREIGN KEY (idTask) REFERENCES Tasks(id)

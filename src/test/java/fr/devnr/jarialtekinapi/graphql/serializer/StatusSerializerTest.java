@@ -20,7 +20,7 @@ class StatusSerializerTest {
         // --{ ACT }--
         StatusDTO dto = StatusSerializer.serialize( Status.TODO );
         // --{ ASSERT }--
-        assertEquals(Integer.valueOf(0), dto.index);
+        assertEquals(Integer.valueOf(0), dto.id);
         assertEquals("TODO", dto.label);
     }
 

@@ -6,6 +6,7 @@
 
 
 -- Ré-initialisation des tables avant le peuplement.
+-- RMQ : les tables sont vidées dans le même ordre que celui dans lequel elles sont peuplées.
 SET FOREIGN_KEY_CHECKS=0;
 TRUNCATE TABLE Tasks;
 TRUNCATE TABLE ParentTasks;

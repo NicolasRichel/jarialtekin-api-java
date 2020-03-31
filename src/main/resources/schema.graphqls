@@ -42,12 +42,12 @@ type Mutation {
 # Basic Types
 # ===========
 type Priority {
-    index: Int!
+    id: Int!
     label: String!
 }
 
 type Status {
-    index: Int!
+    id: Int!
     label: String!
 }
 
