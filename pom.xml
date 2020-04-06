@@ -33,6 +33,7 @@
     <graphqlToolsVersion>4.3.0</graphqlToolsVersion>
     <mariadbClientVersion>2.2.0</mariadbClientVersion>
     <mockitoCoreVersion>2.13.0</mockitoCoreVersion>
+    <jacksonDatabindVersion>2.10.3</jacksonDatabindVersion>
     <javaxServletVersion>3.0.1</javaxServletVersion>
     <junitVersion>4.12</junitVersion>
     <junitJupiterVersion>5.0.0-M4</junitJupiterVersion>
@@ -53,6 +54,11 @@
       <artifactId>javax.servlet-api</artifactId>
       <version>${javaxServletVersion}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jacksonDatabindVersion}</version>
     </dependency>
 
     <!-- GraphQL Dependencies -->
@@ -150,8 +156,6 @@
           <includes>
             <include>**/Test*.java</include>
             <include>**/*Test.java</include>
-            <include>**/*Tests.java</include>
-            <include>**/*TestCase.java</include>
           </includes>
           <properties>
             <!-- <includeTags>db_tests</includeTags> -->

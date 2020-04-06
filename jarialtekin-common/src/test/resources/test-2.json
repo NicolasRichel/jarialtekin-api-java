@@ -1,0 +1,12 @@
+{
+  "field1": "1",
+  "field2": "2",
+  "path": {
+    "to": {
+      "dummy": {
+        "prop1": "Nested Dummy",
+        "prop2": 24
+      }
+    }
+  }
+}

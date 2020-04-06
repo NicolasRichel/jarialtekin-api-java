@@ -13,4 +13,11 @@
   <groupId>fr.devnr.jarialtekin.domain</groupId>
   <artifactId>jarialtekin-domain</artifactId>
 
+  <dependencies>
+    <dependency>
+      <groupId>fr.devnr.jarialtekin.common</groupId>
+      <artifactId>jarialtekin-common</artifactId>
+    </dependency>
+  </dependencies>
+
 </project>

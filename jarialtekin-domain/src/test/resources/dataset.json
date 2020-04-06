@@ -1,0 +1,35 @@
+{
+  "task1": {
+    "id": "1",
+    "name": "T1",
+    "description": "The first task",
+    "status": {
+      "id": "1", "index": 0, "name": "TODO"
+    },
+    "priority": {
+      "id": "1", "index": 0, "name": "Normal"
+    }
+  },
+  "task2": {
+    "id": "2",
+    "name": "T2",
+    "description": "The second task",
+    "status": {
+      "id": "1", "index": 0, "name": "TODO"
+    },
+    "priority": {
+      "id": "2", "index": 1, "name": "High"
+    }
+  },
+  "task3": {
+    "id": "3",
+    "name": "T3",
+    "description": "The third task",
+    "status": {
+      "id": "2", "index": 1, "name": "DOING"
+    },
+    "priority": {
+      "id": "1", "index": 0, "name": "Normal"
+    }
+  }
+}

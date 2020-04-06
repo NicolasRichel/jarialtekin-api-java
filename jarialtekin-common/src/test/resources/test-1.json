@@ -1,0 +1,10 @@
+{
+  "prop1": "Hello World !",
+  "prop2": 42,
+  "prop3": 4.2,
+  "prop4": [ "e1", "e2", "e3" ],
+  "dummyField": {
+    "a": "A",
+    "b": 0
+  }
+}
